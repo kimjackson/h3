@@ -14,11 +14,13 @@
 */
 
 /**
-* brief description of file
+* Utility to check and evaluate a title mask
+* Two important functions in this file:
+*  check_title_mask($mask, $rt) => returns an error string if there is a fault in the given mask for the given record type
+*  fill_title_mask($mask, $rec_id, $rt) => returns the filled-in title mask for the rec_id record entry
 *
 * @author      Tom Murtagh
 * @author      Kim Jackson
-* @author      Ian Johnson   <ian.johnson@sydney.edu.au>
 * @author      Stephen White   <stephen.white@sydney.edu.au>
 * @author      Artem Osmakov   <artem.osmakov@sydney.edu.au>
 * @copyright   (C) 2005-2013 University of Sydney
@@ -29,16 +31,6 @@
 * @subpackage  CommonPHP
 */
 
-
-/* TitleMask.php
- * 2006-09-21
- *
- * Two important functions in this file:
- *  check_title_mask($mask, $rt) => returns an error string if there is a fault in the given mask for the given reference type
- *  fill_title_mask($mask, $rec_id, $rt) => returns the filled-in title mask for this bibliographic entry
- *
- * Various other utility functions starting with _title_mask__ may be ignored and are unlikely to invade your namespaces.
- */
 
 require_once('Temporal.php');
 

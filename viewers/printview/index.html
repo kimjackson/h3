@@ -601,9 +601,8 @@
                 "Please select a different transform. \n\n"+
                 "The xsltProcessor returned Error Message:\n\t"+e.message);
               clearAndDisplayMessage(style+" transform loading problem, please select a different transform above");
-              return;
-            }finally{
               delete xsltProcessor;
+              return;
             }
             if (xsltProcessor){
               try{
