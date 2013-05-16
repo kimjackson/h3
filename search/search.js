@@ -2663,7 +2663,7 @@ top.HEURIST.search = {
 		top.HEURIST.fireEvent(smartyFrame.contentWindow.showReps,"heurist-selectionchange",  ssel);
 */
 		top.HEURIST.search.setSelectedCount();
-
+    top.HEURIST.search.updateBrowserHistory();
 		top.HEURIST.search.updateRecordView(recID);
 		top.HEURIST.search.updateMapOrSmarty();
 
