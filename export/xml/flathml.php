@@ -232,8 +232,7 @@ while ($row = mysql_fetch_assoc($res)) {
         $RQS[$row['rty_ID']][$rst_DetailTypeID] = @$rdr[0];
     }
 }
-/*****DEBUG****/
-//error_log(print_r($RQS,true));
+/*****DEBUG****///error_log(print_r($RQS,true));
 // base names, varieties for detail types
 $query = 'SELECT dty_ID, dty_Name, dty_Type FROM defDetailTypes';
 $res = mysql_query($query);
@@ -244,7 +243,8 @@ while ($row = mysql_fetch_assoc($res)) {
 $INV = mysql__select_assoc('defTerms', //saw Enum change just assoc id to related id
 'trm_ID', 'trm_InverseTermID', '1');
 // lookup detail type enum values
-$query = 'SELECT trm_ID, trm_Label, trm_ParentTermID, trm_OntID, trm_Code FROM defTerms';
+//$query = 'SELECT trm_ID, trm_Label, trm_ParentTermID, trm_OntID, trm_Code FROM defTerms';
+$query = 'SELECT * FROM defTerms';
 $res = mysql_query($query);
 while ($row = mysql_fetch_assoc($res)) {
     $TL[$row['trm_ID']] = $row;
@@ -278,8 +278,7 @@ $RECTYPE_FILTERS = ($filterString ? json_decode($filterString, true) : array());
 if (!isset($RECTYPE_FILTERS)) {
     die(" error decoding json rectype filters string");
 }
-/*****DEBUG****/
-//error_log("rt filters".print_r($RECTYPE_FILTERS,true));
+/*****DEBUG****///error_log("rt filters".print_r($RECTYPE_FILTERS,true));
 $filterString = (@$_REQUEST['relfilters'] ? $_REQUEST['relfilters'] : null);
 if ($filterString && preg_match('/[^\\:\\s"\\[\\]\\{\\}0-9\\,]/', $filterString)) {
     die(" error invalid json relation type filters string");
@@ -288,8 +287,7 @@ $RELTYPE_FILTERS = ($filterString ? json_decode($filterString, true) : array());
 if (!isset($RELTYPE_FILTERS)) {
     die(" error decoding json relation type filters string");
 }
-/*****DEBUG****/
-//error_log("rel filters".print_r($RELTYPE_FILTERS,true));
+/*****DEBUG****///error_log("rel filters".print_r($RELTYPE_FILTERS,true));
 $filterString = (@$_REQUEST['ptrfilters'] ? $_REQUEST['ptrfilters'] : null);
 if ($filterString && preg_match('/[^\\:\\s"\\[\\]\\{\\}0-9\\,]/', $filterString)) {
     die(" error invalid json pointer type filters string");
@@ -298,10 +296,8 @@ $PTRTYPE_FILTERS = ($filterString ? json_decode($filterString, true) : array());
 if (!isset($PTRTYPE_FILTERS)) {
     die(" error decoding json pointer type filters string");
 }
-/*****DEBUG****/
-//error_log("ptr filters".print_r($PTRTYPE_FILTERS,true));
-/*****DEBUG****/
-//error_log("request depth".print_r($_REQUEST['depth'],true));
+/*****DEBUG****///error_log("ptr filters".print_r($PTRTYPE_FILTERS,true));
+/*****DEBUG****///error_log("request depth".print_r($_REQUEST['depth'],true));
 $filterString = (@$_REQUEST['selids'] ? $_REQUEST['selids'] : null);
 if ($filterString && preg_match('/[^\\:\\s"\\[\\]\\{\\}0-9\\,]/', $filterString)) {
     die(" error invalid json rectype filters string");
@@ -319,7 +315,7 @@ if (!isset($SELIDS_FILTERS)) {
     $selectedIDs = array_keys($selectedIDs);
 }
 $MAX_DEPTH = (@$_REQUEST['depth'] ? intval($_REQUEST['depth']) : (count(array_merge(array_keys($PTRTYPE_FILTERS), array_keys($RELTYPE_FILTERS), array_keys($RECTYPE_FILTERS), array_keys($SELIDS_FILTERS))) > 0 ? max(array_merge(array_keys($PTRTYPE_FILTERS), array_keys($RELTYPE_FILTERS), array_keys($RECTYPE_FILTERS), array_keys($SELIDS_FILTERS))) : 0)); // default to only one level
-// handle special case for collection where ids are stored in teh session.
+// handle special case for collection where ids are stored in the session.
 if (array_key_exists('q', $_REQUEST)) {
     if (preg_match('/_COLLECTED_/', $_REQUEST['q'])) {
         if (!session_id()) session_start();
@@ -592,6 +588,15 @@ function findRelatedRecords($qrec_ids, &$recSet, $depth, $rtyIDs, $relTermIDs) {
     }
     return array_keys($nlrIDs);
 }
+//----------------------------------------------------------------------------//
+//  Output functions
+//----------------------------------------------------------------------------//
+// lookup for rectypes to output: used or all
+$outputRecTypes = array();
+// lookup for detailtypes to output: used or all
+$outputDetailTypes = array();
+// lookup for term definitions to output: used or all
+$outputTerms = array();
 /**
  * buildGraph - Function to build the structure for a set of records and all there related(linked) records to a given level
  * @author Stephen White
@@ -630,9 +635,7 @@ function buildGraphStructure($rec_ids, &$recSet) {
         }
     }
 }
-//----------------------------------------------------------------------------//
-//  Output functions
-//----------------------------------------------------------------------------//
+
 /**
  * description
  * @global    type description of global variable usage in a function
@@ -667,9 +670,6 @@ function outputRecords($result) {
     }
     closeTag('records');
 }
-//----------------------------------------------------------------------------//
-//  Output functions
-//----------------------------------------------------------------------------//
 /**
  * description
  * @global    type description of global variable usage in a function
@@ -682,7 +682,8 @@ function outputRecords($result) {
  * @uses      code_element_name description of use
  */
 function outputRecord($recordInfo, $recInfos, $outputStub = false, $parentID = null) {
-    global $RTN, $DTN, $INV, $TL, $RQS, $WGN, $UGN, $MAX_DEPTH, $WOOT, $USEXINCLUDELEVEL, $RECTYPE_FILTERS, $SUPRESS_LOOPBACKS, $relRT, $relTrgDT, $relTypDT, $relSrcDT, $selectedIDs;
+    global $RTN, $DTN, $INV, $TL, $RQS, $WGN, $UGN, $MAX_DEPTH, $WOOT, $USEXINCLUDELEVEL, $RECTYPE_FILTERS, $SUPRESS_LOOPBACKS,
+            $relRT, $relTrgDT, $relTypDT, $relSrcDT, $selectedIDs, $outputRecTypes;
     $record = $recordInfo['record'];
     $depth = $recordInfo['depth'];
     $filter = (array_key_exists($depth, $RECTYPE_FILTERS) ? $RECTYPE_FILTERS[$depth] : null);
@@ -716,6 +717,8 @@ function outputRecord($recordInfo, $recInfos, $outputStub = false, $parentID = n
     }
     makeTag('id', null, $record['rec_ID']);
     makeTag('type', array('id' => $record['rec_RecTypeID'], 'conceptID' => getRecTypeConceptID($record['rec_RecTypeID'])), $RTN[$record['rec_RecTypeID']]);
+    //save rectype for schema output
+    $outputRecTypes[$record['rec_RecTypeID']] = 1;
     makeTag('title', null, $record['rec_Title']);
     if ($record['rec_URL']) {
         makeTag('url', null, $record['rec_URL']);
@@ -891,11 +894,13 @@ function outputXInclude($record) {
  * @uses      code_element_name description of use
  */
 function outputRecordStub($recordStub) {
-    global $RTN;
+    global $RTN, $outputRecTypes;
     openTag('record', array('isStub' => 1));
     makeTag('id', null, array_key_exists('id', $recordStub) ? $recordStub['id'] : $recordStub['rec_ID']);
     $type = array_key_exists('type', $recordStub) ? $recordStub['type'] : $recordStub['rec_RecTypeID'];
     makeTag('type', array('id' => $type, 'conceptID' => getRecTypeConceptID($type)), $RTN[$type]);
+    //save rectype for schema output
+    $outputRecTypes[$type] = 1;
     $title = array_key_exists('title', $recordStub) ? $recordStub['title'] : $recordStub['rec_Title'];
     makeTag('title', null, $title);
     closeTag('record');
@@ -960,8 +965,10 @@ function makeFileContentNode($file) {
  * @uses      code_element_name description of use
  */
 function outputDetail($dt, $value, $rt, $recInfos, $depth = 0, $outputStub, $parentID) {
-    global $DTN, $DTT, $TL, $RQS, $INV, $GEO_TYPES, $MAX_DEPTH, $INCLUDE_FILE_CONTENT, $SUPRESS_LOOPBACKS, $relTypDT;
+    global $DTN, $DTT, $TL, $RQS, $INV, $GEO_TYPES, $MAX_DEPTH, $INCLUDE_FILE_CONTENT, $SUPRESS_LOOPBACKS, $relTypDT, $outputDetailTypes;
     $attrs = array('id' => $dt, 'conceptID' => getDetailTypeConceptID($dt));
+    //save detailtype for schema output
+    $outputDetailTypes[$dt] = 1;
     if (array_key_exists($dt, $DTN)) {
         $attrs['type'] = $DTN[$dt];
     }
@@ -1250,6 +1257,318 @@ function outputDurationDetail($attrs, $value) {
         }
     }
 }
+
+/**
+ * outputs rectype  definitions with recstructure definitions, detailtype definitions and term definitions
+ * @global    type description of global variable usage in a function
+ * @staticvar type [$varname] description of static variable usage in function
+ * @param     type [$varname] description
+ * @return    type description
+ * @link      URL
+ * @see       name of another element (function or object) used in this function
+ * @throws    list of exceptions thrown in this code
+ * @uses      code_element_name description of use
+ */
+function outputSchema() {
+  GLOBAL $outputRecTypes, $outputDetailTypes, $outputTerms;
+  $fullSchema = (count($outputRecTypes) == 0 || array_key_exists('fullSchema',$_REQUEST));
+  // record type labels
+  openTag('rectypes',null);
+  $query = 'SELECT * FROM defRecTypes';
+  $res = mysql_query($query);
+  while ($row = mysql_fetch_assoc($res)) {
+      $rtyID = $row['rty_ID'];
+      if (!$fullSchema && !array_key_exists($rtyID,$outputRecTypes)){
+        continue;
+      }
+      openTag('rectype',null);
+      makeTag('id', null, $rtyID);
+      makeTag('conceptID', null, getRecTypeConceptID($rtyID));
+      if ($row["rty_Name"]) {
+        makeTag('name', null, $row["rty_Name"]);
+      }else{
+        makeTag('name', null, "not defined");
+      }
+      if ($row["rty_Type"]) {
+        makeTag('type', null, $row["rty_Type"]);
+      }
+      if ($row["rty_Description"]) {
+        makeTag('description', null, $row["rty_Description"]);
+      }
+      if ($row["rty_TitleMask"]) {
+        makeTag('titleMask', null, $row["rty_TitleMask"]);
+      }
+      if ($row["rty_Plural"]) {
+        makeTag('plural', null, $row["rty_Plural"]);
+      }
+      if ($row["rty_OriginatingDBID"]) {
+        makeTag('originalDBID', null, $row["rty_OriginatingDBID"]);
+      }
+      if ($row["rty_NameInOriginatingDB"]) {
+        makeTag('originalName', null, $row["rty_NameInOriginatingDB"]);
+      }
+      if ($row["rty_IDInOriginatingDB"]) {
+        makeTag('idInOriginalDB', null, $row["rty_IDInOriginatingDB"]);
+      }
+      if ($row["rty_ReferenceURL"]) {
+        makeTag('referenceLink', null, $row["rty_ReferenceURL"]);
+      }
+      if ($row["rty_Modified"]) {
+        makeTag('modified', null, $row["rty_Modified"]);
+      }
+      outputFields($rtyID);
+      closeTag('rectype');
+  }
+  closeTag('rectypes');
+  outputDetailtypes();
+  outputTerms();
+}
+
+/**
+ * outputs rectype  definitions with recstructure definitions, detailtype definitions and term definitions
+ * @global    type description of global variable usage in a function
+ * @staticvar type [$varname] description of static variable usage in function
+ * @param     type [$varname] description
+ * @return    type description
+ * @link      URL
+ * @see       name of another element (function or object) used in this function
+ * @throws    list of exceptions thrown in this code
+ * @uses      code_element_name description of use
+ */
+function outputFields($rtyID) {
+  GLOBAL $outputRecTypes, $outputDetailTypes, $outputTerms,$DTN, $TL;
+  $query = "SELECT * FROM defRecStructure where rst_RecTypeID = $rtyID";
+  $res = mysql_query($query);
+  while ($row = mysql_fetch_assoc($res)) {
+      openTag('field',null);
+      if ($row["rst_DisplayName"]) {
+        makeTag('name', null, $row["rst_DisplayName"]);
+      }else{
+        makeTag('name', null, "not defined");
+      }
+      if ($row["rst_DetailTypeID"]) {
+        $attrs = array('id' => $row["rst_DetailTypeID"], 'conceptID' => getDetailTypeConceptID($row["rst_DetailTypeID"]));
+        makeTag('type', $attrs, $DTN[$row["rst_DetailTypeID"]]);
+        $outputDetailTypes[$row["rst_DetailTypeID"]] = 1;
+      }
+      if ($row["rst_DisplayHelpText"]) {
+        makeTag('help', null, $row["rst_DisplayHelpText"]);
+      }
+      if ($row["rst_DisplayExtendedDescription"]) {
+        makeTag('description', null, $row["rst_DisplayExtendedDescription"]);
+      }
+      if ($row["rst_RecordMatchOrder"]) {
+        makeTag('matchOrder', null, $row["rst_RecordMatchOrder"]);
+      }
+      if ($row["rst_RequirementType"]) {
+        makeTag('requirement', null, $row["rst_RequirementType"]);
+      }
+      if ($row["rst_MaxValues"]) {
+        makeTag('maxNumber', null, $row["rst_MaxValues"]);
+      }
+      if ($row["rst_MinValues"]) {
+        makeTag('minNumber', null, $row["rst_MinValues"]);
+      }
+      if ($row["rst_FilteredJsonTermIDTree"]) {
+        makeTag('termSet', null, $row["rst_FilteredJsonTermIDTree"]);
+        //add all termIDs to output array
+        if (strpos($row["rst_FilteredJsonTermIDTree"],"{")!== false) {
+          $temp = preg_replace("/[\{\}\",]/","",$row["rst_FilteredJsonTermIDTree"]);
+          if (strrpos($temp,":") == strlen($temp)-1) {
+            $temp = substr($temp,0, strlen($temp)-1);
+          }
+          $termIDs = explode(":",$temp);
+        }else{
+          $termIDs = getTermOffspringList($row["rst_FilteredJsonTermIDTree"]);
+        }
+        foreach ($termIDs as $trmID) {
+          $outputTerms[$trmID] = 1;
+          if ($TL[$trmID]['trm_ParentTermID']){
+            $outputTerms[$TL[$trmID]['trm_ParentTermID']] = 1;
+          }
+          if ($TL[$trmID]['trm_InverseTermID']){
+            $outputTerms[$TL[$trmID]['trm_InverseTermID']] = 1;
+          }
+        }
+      }
+      if ($row["rst_TermIDTreeNonSelectableIDs"]) {
+        makeTag('nonSelectableTerms', null, $row["rst_TermIDTreeNonSelectableIDs"]);
+      }
+      if ($row["rst_PtrFilteredIDs"]) {
+        makeTag('pointerConstraint', null, $row["rst_PtrFilteredIDs"]);
+      }
+      if ($row["rst_Modified"]) {
+        makeTag('modified', null, $row["rst_Modified"]);
+      }
+      closeTag('field');
+  }
+}
+/**
+ * outputs rectype  definitions with recstructure definitions, detailtype definitions and term definitions
+ * @global    type description of global variable usage in a function
+ * @staticvar type [$varname] description of static variable usage in function
+ * @param     type [$varname] description
+ * @return    type description
+ * @link      URL
+ * @see       name of another element (function or object) used in this function
+ * @throws    list of exceptions thrown in this code
+ * @uses      code_element_name description of use
+ */
+function outputDetailtypes() {
+  GLOBAL $outputRecTypes, $outputDetailTypes, $outputTerms, $TL;
+  $fullSchema = (count($outputRecTypes) == 0 || array_key_exists('fullSchema',$_REQUEST));
+  // record type labels
+  openTag('detailtypes',null);
+  $query = 'SELECT * FROM defDetailTypes';
+  $res = mysql_query($query);
+  while ($row = mysql_fetch_assoc($res)) {
+      $dtyID = $row['dty_ID'];
+      if (!$fullSchema && !array_key_exists($dtyID,$outputDetailTypes)){
+        continue;
+      }
+      openTag('detailtype',null);
+      makeTag('id', null, $dtyID);
+      makeTag('conceptID', null, getDetailTypeConceptID($dtyID));
+      if ($row["dty_Name"]) {
+        makeTag('name', null, $row["dty_Name"]);
+      }else{
+        makeTag('name', null, "not defined");
+      }
+      if ($row["dty_Type"]) {
+        makeTag('type', null, $row["dty_Type"]);
+      }
+      if ($row["dty_Description"]) {
+        makeTag('description', null, $row["dty_Description"]);
+      }
+      if ($row["dty_EntryMask"]) {
+        makeTag('entryMask', null, $row["dty_EntryMask"]);
+      }
+      if ($row["dty_HelpText"]) {
+        makeTag('help', null, $row["dty_HelpText"]);
+      }
+      if ($row["dty_Documentation"]) {
+        makeTag('documentation', null, $row["dty_Documentation"]);
+      }
+      if ($row["dty_ExtendedDescription"]) {
+        makeTag('description', null, $row["dty_ExtendedDescription"]);
+      }
+      if ($row["dty_JsonTermIDTree"]) {
+        makeTag('termSet', null, $row["dty_JsonTermIDTree"]);
+        //add all termIDs to output array
+        if (strpos($row["dty_JsonTermIDTree"],"{")!== false) {
+          $temp = preg_replace("/[\{\}\",]/","",$row["dty_JsonTermIDTree"]);
+          if (strrpos($temp,":") == strlen($temp)-1) {
+            $temp = substr($temp,0, strlen($temp)-1);
+          }
+          $termIDs = explode(":",$temp);
+        }else{
+          $termIDs = getTermOffspringList($row["dty_JsonTermIDTree"]);
+        }
+        foreach ($termIDs as $trmID) {
+          $outputTerms[$trmID] = 1;
+          if ($TL[$trmID]['trm_ParentTermID']){
+            $outputTerms[$TL[$trmID]['trm_ParentTermID']] = 1;
+          }
+          if ($TL[$trmID]['trm_InverseTermID']){
+            $outputTerms[$TL[$trmID]['trm_InverseTermID']] = 1;
+          }
+        }
+      }
+      if ($row["dty_TermIDTreeNonSelectableIDs"]) {
+        makeTag('nonSelectableTerms', null, $row["dty_TermIDTreeNonSelectableIDs"]);
+      }
+      if ($row["dty_PtrTargetRectypeIDs"]) {
+        makeTag('pointerConstraint', null, $row["dty_PtrTargetRectypeIDs"]);
+      }
+      if ($row["dty_FieldSetRectypeID"]) {
+        makeTag('fieldSetRectypeID', null, $row["dty_FieldSetRectypeID"]);
+      }
+      if ($row["dty_OriginatingDBID"]) {
+        makeTag('originalDBID', null, $row["dty_OriginatingDBID"]);
+      }
+      if ($row["dty_NameInOriginatingDB"]) {
+        makeTag('originalName', null, $row["dty_NameInOriginatingDB"]);
+      }
+      if ($row["dty_IDInOriginatingDB"]) {
+        makeTag('idInOriginalDB', null, $row["dty_IDInOriginatingDB"]);
+      }
+      if ($row["dty_Modified"]) {
+        makeTag('modified', null, $row["dty_Modified"]);
+      }
+      closeTag('detailtype');
+  }
+  closeTag('detailtypes');
+}
+/**
+ * outputs term  definitions
+ * @global    type description of global variable usage in a function
+ * @staticvar type [$varname] description of static variable usage in function
+ * @param     type [$varname] description
+ * @return    type description
+ * @link      URL
+ * @see       name of another element (function or object) used in this function
+ * @throws    list of exceptions thrown in this code
+ * @uses      code_element_name description of use
+ */
+function outputTerms() {
+  GLOBAL $outputRecTypes, $outputDetailTypes, $outputTerms, $TL;
+  $fullSchema = (count($outputTerms) == 0 || array_key_exists('fullSchema',$_REQUEST));
+  // record type labels
+  openTag('terms',null);
+  foreach ($TL as $row) {
+      $trmID = $row['trm_ID'];
+      if (!$fullSchema && !array_key_exists($trmID,$outputTerms)){
+        continue;
+      }
+      openTag('term',null);
+      makeTag('id', null, $trmID);
+      makeTag('conceptID', null, getTermConceptID($trmID));
+      if ($row["trm_Label"]) {
+        makeTag('label', null, $row["trm_Label"]);
+      }else{
+        makeTag('label', null, "not defined");
+      }
+      if ($row["trm_InverseTermID"] && $TL[$row["trm_InverseTermID"]]) {
+        makeTag('inverse', array("id" => $row["trm_InverseTermID"]),$TL[$row["trm_InverseTermID"]]['trm_Label'] );
+      }
+      if ($row["trm_Description"]) {
+        makeTag('description', null, $row["trm_Description"]);
+      }
+      if ($row["trm_Domain"]) {
+        makeTag('domain', null, $row["trm_Domain"]);
+      }
+      if ($row["trm_OntID"]) {
+        makeTag('ontology', null, $row["trm_OntID"]);
+      }
+      if ($row["trm_Depth"]) {
+        makeTag('depth', null, $row["trm_Depth"]);
+      }
+      if ($row["trm_Code"]) {
+        makeTag('code', null, $row["trm_Code"]);
+      }
+      if ($row["trm_ParentTermID"] && $TL[$row["trm_ParentTermID"]]) {
+        makeTag('parentTerm', array("id" => $row["trm_ParentTermID"]),$TL[$row["trm_ParentTermID"]]['trm_Label'] );
+      }
+      if ($row["trm_OriginatingDBID"]) {
+        makeTag('originalDBID', null, $row["trm_OriginatingDBID"]);
+      }
+      if ($row["trm_NameInOriginatingDB"]) {
+        makeTag('originalName', null, $row["trm_NameInOriginatingDB"]);
+      }
+      if ($row["trm_IDInOriginatingDB"]) {
+        makeTag('idInOriginalDB', null, $row["trm_IDInOriginatingDB"]);
+      }
+      if ($row["trm_Modified"]) {
+        makeTag('modified', null, $row["trm_Modified"]);
+      }
+      closeTag('term');
+  }
+  closeTag('terms');
+}
+
+//----------------------------------------------------------------------------//
+//  Utility functions
+//----------------------------------------------------------------------------//
 $invalidChars = array(chr(0), chr(1), chr(2), chr(3), chr(4), chr(5), chr(6), chr(7), chr(8), chr(11), chr(12), chr(14), chr(15), chr(16), chr(17), chr(18), chr(19), chr(20), chr(21), chr(22), chr(23), chr(24), chr(25), chr(26), chr(27), chr(28), chr(29), chr(30), chr(31)); // invalid chars that need to be stripped from the data.
 $replacements = array("[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", "[?]", " ", "[?]", "[?]", "[?]", "[?]", "[?]");
 /**
@@ -1309,8 +1628,7 @@ if (@$_REQUEST['mode'] != '1') { //not include
 //echo "request = ".print_r($_REQUEST,true)."\n";
 //error_log("flathml pubonly = ".print_r($PUBONLY,true));
 $result = loadSearch($_REQUEST, false, true, $PUBONLY);
-/*****DEBUG****/
-//error_log("$result = ".print_r($result,true)."\n");
+/*****DEBUG****///error_log("$result = ".print_r($result,true)."\n");
 $hmlAttrs = array();
 if ($USEXINCLUDE) {
     $hmlAttrs['xmlns:xi'] = 'http://www.w3.org/2001/XInclude';
@@ -1331,7 +1649,7 @@ openTag('hml', array(
 */
 /*****DEBUG****/
 //error_log("selids".print_r($_REQUEST['selids'],true));
-$query_attrs = array_intersect_key($_REQUEST, array('q' => 1, 'w' => 1, 'pubonly' => 1, 'hinclude' => 1, 'depth' => 1, 'sid' => 1, 'label' => 1, 'f' => 1, 'limit' => 1, 'offset' => 1, 'db' => 1, 'expandColl' => 1, 'recID' => 1, 'stub' => 1, 'woot' => 1, 'fc' => 1, 'slb' => 1, 'fc' => 1, 'slb' => 1, 'selids' => 1, 'layout' => 1, 'rtfilters' => 1, 'relfilters' => 1, 'ptrfilters' => 1));
+$query_attrs = array_intersect_key($_REQUEST, array('q' => 1, 'w' => 1, 'pubonly' => 1, 'fullSchema' => 1, 'hinclude' => 1, 'depth' => 1, 'sid' => 1, 'label' => 1, 'f' => 1, 'limit' => 1, 'offset' => 1, 'db' => 1, 'expandColl' => 1, 'recID' => 1, 'stub' => 1, 'woot' => 1, 'fc' => 1, 'slb' => 1, 'fc' => 1, 'slb' => 1, 'selids' => 1, 'layout' => 1, 'rtfilters' => 1, 'relfilters' => 1, 'ptrfilters' => 1));
 makeTag('database', array('id' => HEURIST_DBID), HEURIST_DBNAME);
 makeTag('query', $query_attrs);
 if (count($selectedIDs) > 0) {
@@ -1339,11 +1657,16 @@ if (count($selectedIDs) > 0) {
 }
 makeTag('dateStamp', null, date('c'));
 if (array_key_exists('error', $result)) {
-    makeTag('error', null, $result['error']);
+    if (!array_key_exists("q",$_REQUEST) && array_key_exists("fullSchema",$_REQUEST)) {
+      outputSchema();
+    } else {
+      makeTag('error', null, $result['error']);
+    }
 } else {
     makeTag('resultCount', null, $result['resultCount'] ? $result['resultCount'] : " 0 ");
     makeTag('recordCount', null, $result['recordCount'] ? $result['recordCount'] : " 0 ");
     if ($result['recordCount'] > 0) outputRecords($result);
+    outputSchema();
 }
 closeTag('hml');
 ?>
