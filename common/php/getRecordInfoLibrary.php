@@ -145,7 +145,7 @@ function getCachedData($key) {
 
     if (!$memcache) {
         $memcache = new Memcache;
-        if (!$memcache->connect('localhost', MEMCACHED_PORT)) {
+        if (!$memcache->connect('127.0.0.1', MEMCACHED_PORT)) {
             error_log("couldn't connect to memcached - running directly from DB");
             return null;
         }
@@ -174,7 +174,7 @@ function setCachedData($key, $var) {
     global $memcache, $lastModified;
     if (!$memcache) {
         $memcache = new Memcache;
-        if (!$memcache->connect('localhost', MEMCACHED_PORT)) { //saw Decision: error or just load raw???
+        if (!$memcache->connect('127.0.0.1', MEMCACHED_PORT)) { //saw Decision: error or just load raw???
             error_log("couldn't connect to memcached - not caching DB queries");
         }
     }
@@ -909,9 +909,26 @@ function getTermOffspringList($termID, $getAllDescentTerms = true) {
     }
     return $offspring;
 }
+
 /**
- * return array of recType table column names
+ * returns the subtree of all terms under a given term
+ * @param     int $termID
+ * @return    tree of term IDs
  */
+function getTermSubTree($termID) {
+    $subtree = array();
+    if ($termID) {
+        $res = mysql_query("select * from defTerms where trm_ParentTermID = $termID");
+        if (mysql_num_rows($res)) { //child nodes exist
+            while ($row = mysql_fetch_assoc($res)) { // for each child node
+                $subTermID = $row['trm_ID'];
+                $subtree[$subTermID] = $row['trm_ChildCount'] > 0 ? getTermOffspringList($subTermID): array();
+            }
+        }
+    }
+    return $subtree;
+}
+
 function getRectypeColNames() {
     return array("rty_Name", "rty_OrderInGroup", "rty_Description", "rty_TitleMask", "rty_CanonicalTitleMask", "rty_Plural",
                 "rty_Status", "rty_OriginatingDBID", "rty_NameInOriginatingDB", "rty_IDInOriginatingDB", "rty_NonOwnerVisibility",

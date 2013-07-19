@@ -138,7 +138,7 @@ function makeTag($name, $attributes = null, $textContent = null, $close = true, 
         } else {
             $tag.= $textContent;
         }
-        $tag.= "</$name>";
+        if ($close) $tag.= "</$name>";
     }
     echo $tag . "\n";
     /*****DEBUG****/
@@ -1351,60 +1351,96 @@ function outputFields($rtyID) {
         makeTag('type', $attrs, $DTN[$row["rst_DetailTypeID"]]);
         $outputDetailTypes[$row["rst_DetailTypeID"]] = 1;
       }
-      if ($row["rst_DisplayHelpText"]) {
+      if (@$row["rst_DisplayHelpText"]) {
         makeTag('help', null, $row["rst_DisplayHelpText"]);
       }
-      if ($row["rst_DisplayExtendedDescription"]) {
+      if (@$row["rst_DisplayExtendedDescription"]) {
         makeTag('description', null, $row["rst_DisplayExtendedDescription"]);
       }
-      if ($row["rst_RecordMatchOrder"]) {
+      if (@$row["rst_RecordMatchOrder"]) {
         makeTag('matchOrder', null, $row["rst_RecordMatchOrder"]);
       }
-      if ($row["rst_RequirementType"]) {
+      if (@$row["rst_RequirementType"]) {
         makeTag('requirement', null, $row["rst_RequirementType"]);
       }
-      if ($row["rst_MaxValues"]) {
+      if (@$row["rst_MaxValues"]) {
         makeTag('maxNumber', null, $row["rst_MaxValues"]);
       }
-      if ($row["rst_MinValues"]) {
+      if (@$row["rst_MinValues"]) {
         makeTag('minNumber', null, $row["rst_MinValues"]);
       }
-      if ($row["rst_FilteredJsonTermIDTree"]) {
-        makeTag('termSet', null, $row["rst_FilteredJsonTermIDTree"]);
-        //add all termIDs to output array
+      if (@$row["rst_FilteredJsonTermIDTree"]) {
+        if (@$row["rst_TermIDTreeNonSelectableIDs"]) {
+          $nonSelectTerms = json_decode($row["rst_TermIDTreeNonSelectableIDs"]);
+        }else{ // todo should probably use non-selectables from base detail type if non here or check this is handled in the query
+          $nonSelectTerms = null;
+        }
+        openTag('termSet');
+        //calculate termSet
         if (strpos($row["rst_FilteredJsonTermIDTree"],"{")!== false) {
-          $temp = preg_replace("/[\{\}\",]/","",$row["rst_FilteredJsonTermIDTree"]);
-          if (strrpos($temp,":") == strlen($temp)-1) {
-            $temp = substr($temp,0, strlen($temp)-1);
-          }
-          $termIDs = explode(":",$temp);
-        }else{
-          $termIDs = getTermOffspringList($row["rst_FilteredJsonTermIDTree"]);
+          $termSet = json_decode($row["rst_FilteredJsonTermIDTree"],true);
+        }else if (is_numeric($row["rst_FilteredJsonTermIDTree"])){ //single term representing a vocabulary
+          $termSet = getTermSubTree($row["rst_FilteredJsonTermIDTree"]);
         }
-        foreach ($termIDs as $trmID) {
-          $outputTerms[$trmID] = 1;
-          if ($TL[$trmID]['trm_ParentTermID']){
-            $outputTerms[$TL[$trmID]['trm_ParentTermID']] = 1;
-          }
-          if ($TL[$trmID]['trm_InverseTermID']){
-            $outputTerms[$TL[$trmID]['trm_InverseTermID']] = 1;
+        if (count($termSet) == 1) {//json encode of a single term
+          foreach ($termSet as $termID => $subtree) {
+            if ( $subtree && count($subtree) == 0) {
+              $termSet = getTermSubTree($termID);
+            }
           }
         }
+//        error_log("termset = ".print_r($termSet,true));
+        outputTermSet($termSet,$nonSelectTerms);
+        closeTag("termSet");
       }
-      if ($row["rst_TermIDTreeNonSelectableIDs"]) {
+      if (@$row["rst_TermIDTreeNonSelectableIDs"]) {
         makeTag('nonSelectableTerms', null, $row["rst_TermIDTreeNonSelectableIDs"]);
       }
-      if ($row["rst_PtrFilteredIDs"]) {
+      if (@$row["rst_PtrFilteredIDs"]) {
         makeTag('pointerConstraint', null, $row["rst_PtrFilteredIDs"]);
       }
-      if ($row["rst_Modified"]) {
+      if (@$row["rst_Modified"]) {
         makeTag('modified', null, $row["rst_Modified"]);
       }
       closeTag('field');
   }
 }
 /**
- * outputs rectype  definitions with recstructure definitions, detailtype definitions and term definitions
+ * outputs terms of a termSet nesting for childTerms
+ * @global    type description of global variable usage in a function
+ * @staticvar type [$varname] description of static variable usage in function
+ * @param     type [$varname] description
+ * @return    type description
+ * @link      URL
+ * @see       name of another element (function or object) used in this function
+ * @throws    list of exceptions thrown in this code
+ * @uses      code_element_name description of use
+ */
+function outputTermSet($termSet, $nonSelectTerms, $isSubTree = false) {
+  GLOBAL $outputTerms, $TL;
+  foreach ($termSet as $termID => $subtree) {
+    $outputTerms[$termID] = 1;
+    if (@$TL[$termID]['trm_ParentTermID']){
+      $outputTerms[$TL[$termID]['trm_ParentTermID']] = 1;
+    }
+    if (@$TL[$termID]['trm_InverseTermID']){
+      $outputTerms[$TL[$termID]['trm_InverseTermID']] = 1;
+    }
+    $attrs = array("id" => $termID, "label" => $TL[$termID]["trm_Label"]);
+    if ($nonSelectTerms && in_array($termID,$nonSelectTerms)){
+      $attrs['nonSelectable'] = "true";
+    }
+    if (count($subtree) > 0 ) {
+      makeTag(($isSubTree ? "subterm":"term"),$attrs,null,false);
+      outputTermSet($subtree, $nonSelectTerms, true);
+      closeTag(($isSubTree ? "subterm":"term"));
+    }else{
+      makeTag(($isSubTree ? "subterm":"term"),$attrs,null);
+    }
+  }
+}
+/**
+ * outputs detailType definitions
  * @global    type description of global variable usage in a function
  * @staticvar type [$varname] description of static variable usage in function
  * @param     type [$varname] description
@@ -1437,62 +1473,61 @@ function outputDetailtypes() {
       if ($row["dty_Type"]) {
         makeTag('type', null, $row["dty_Type"]);
       }
-      if ($row["dty_Description"]) {
+      if (@$row["dty_Description"]) {
         makeTag('description', null, $row["dty_Description"]);
       }
-      if ($row["dty_EntryMask"]) {
+      if (@$row["dty_EntryMask"]) {
         makeTag('entryMask', null, $row["dty_EntryMask"]);
       }
-      if ($row["dty_HelpText"]) {
+      if (@$row["dty_HelpText"]) {
         makeTag('help', null, $row["dty_HelpText"]);
       }
-      if ($row["dty_Documentation"]) {
+      if (@$row["dty_Documentation"]) {
         makeTag('documentation', null, $row["dty_Documentation"]);
       }
-      if ($row["dty_ExtendedDescription"]) {
+      if (@$row["dty_ExtendedDescription"]) {
         makeTag('description', null, $row["dty_ExtendedDescription"]);
       }
-      if ($row["dty_JsonTermIDTree"]) {
-        makeTag('termSet', null, $row["dty_JsonTermIDTree"]);
-        //add all termIDs to output array
-        if (strpos($row["dty_JsonTermIDTree"],"{")!== false) {
-          $temp = preg_replace("/[\{\}\",]/","",$row["dty_JsonTermIDTree"]);
-          if (strrpos($temp,":") == strlen($temp)-1) {
-            $temp = substr($temp,0, strlen($temp)-1);
-          }
-          $termIDs = explode(":",$temp);
+      if (@$row["dty_JsonTermIDTree"]) {
+        if (@$row["dty_TermIDTreeNonSelectableIDs"]) {
+          $nonSelectTerms = json_decode($row["dty_TermIDTreeNonSelectableIDs"]);
         }else{
-          $termIDs = getTermOffspringList($row["dty_JsonTermIDTree"]);
+          $nonSelectTerms = null;
         }
-        foreach ($termIDs as $trmID) {
-          $outputTerms[$trmID] = 1;
-          if ($TL[$trmID]['trm_ParentTermID']){
-            $outputTerms[$TL[$trmID]['trm_ParentTermID']] = 1;
-          }
-          if ($TL[$trmID]['trm_InverseTermID']){
-            $outputTerms[$TL[$trmID]['trm_InverseTermID']] = 1;
+        openTag('termSet');
+        //calculate termSet
+        if (strpos($row["dty_JsonTermIDTree"],"{")!== false) {
+          $termSet = json_decode($row["dty_JsonTermIDTree"],true);
+        }else if (is_numeric($row["dty_JsonTermIDTree"])){ //single term representing a vocabulary
+          $termSet = getTermSubTree($row["dty_JsonTermIDTree"]);
+        }
+        if (count($termSet) == 1) {//json encode of a single term
+          foreach ($termSet as $termID => $subtree) {
+            if ( $subtree && count($subtree) == 0) {
+              $termSet = getTermSubTree($termID);
+            }
           }
         }
+        //error_log("termset = ".print_r($termSet,true));
+        outputTermSet($termSet,$nonSelectTerms);
+        closeTag("termSet");
       }
-      if ($row["dty_TermIDTreeNonSelectableIDs"]) {
-        makeTag('nonSelectableTerms', null, $row["dty_TermIDTreeNonSelectableIDs"]);
-      }
-      if ($row["dty_PtrTargetRectypeIDs"]) {
+      if (@$row["dty_PtrTargetRectypeIDs"]) {
         makeTag('pointerConstraint', null, $row["dty_PtrTargetRectypeIDs"]);
       }
-      if ($row["dty_FieldSetRectypeID"]) {
+      if (@$row["dty_FieldSetRectypeID"]) {
         makeTag('fieldSetRectypeID', null, $row["dty_FieldSetRectypeID"]);
       }
-      if ($row["dty_OriginatingDBID"]) {
+      if (@$row["dty_OriginatingDBID"]) {
         makeTag('originalDBID', null, $row["dty_OriginatingDBID"]);
       }
-      if ($row["dty_NameInOriginatingDB"]) {
+      if (@$row["dty_NameInOriginatingDB"]) {
         makeTag('originalName', null, $row["dty_NameInOriginatingDB"]);
       }
-      if ($row["dty_IDInOriginatingDB"]) {
+      if (@$row["dty_IDInOriginatingDB"]) {
         makeTag('idInOriginalDB', null, $row["dty_IDInOriginatingDB"]);
       }
-      if ($row["dty_Modified"]) {
+      if (@$row["dty_Modified"]) {
         makeTag('modified', null, $row["dty_Modified"]);
       }
       closeTag('detailtype');
@@ -1520,7 +1555,7 @@ function outputTerms() {
       if (!$fullSchema && !array_key_exists($trmID,$outputTerms)){
         continue;
       }
-      openTag('term',null);
+      openTag('termdef',null);
       makeTag('id', null, $trmID);
       makeTag('conceptID', null, getTermConceptID($trmID));
       if ($row["trm_Label"]) {
@@ -1528,40 +1563,40 @@ function outputTerms() {
       }else{
         makeTag('label', null, "not defined");
       }
-      if ($row["trm_InverseTermID"] && $TL[$row["trm_InverseTermID"]]) {
+      if (@$row["trm_InverseTermID"] && $TL[$row["trm_InverseTermID"]]) {
         makeTag('inverse', array("id" => $row["trm_InverseTermID"]),$TL[$row["trm_InverseTermID"]]['trm_Label'] );
       }
-      if ($row["trm_Description"]) {
+      if (@$row["trm_Description"]) {
         makeTag('description', null, $row["trm_Description"]);
       }
-      if ($row["trm_Domain"]) {
+      if (@$row["trm_Domain"]) {
         makeTag('domain', null, $row["trm_Domain"]);
       }
-      if ($row["trm_OntID"]) {
+      if (@$row["trm_OntID"]) {
         makeTag('ontology', null, $row["trm_OntID"]);
       }
-      if ($row["trm_Depth"]) {
+      if (@$row["trm_Depth"]) {
         makeTag('depth', null, $row["trm_Depth"]);
       }
-      if ($row["trm_Code"]) {
+      if (@$row["trm_Code"]) {
         makeTag('code', null, $row["trm_Code"]);
       }
-      if ($row["trm_ParentTermID"] && $TL[$row["trm_ParentTermID"]]) {
+      if (@$row["trm_ParentTermID"] && $TL[$row["trm_ParentTermID"]]) {
         makeTag('parentTerm', array("id" => $row["trm_ParentTermID"]),$TL[$row["trm_ParentTermID"]]['trm_Label'] );
       }
-      if ($row["trm_OriginatingDBID"]) {
+      if (@$row["trm_OriginatingDBID"]) {
         makeTag('originalDBID', null, $row["trm_OriginatingDBID"]);
       }
-      if ($row["trm_NameInOriginatingDB"]) {
+      if (@$row["trm_NameInOriginatingDB"]) {
         makeTag('originalName', null, $row["trm_NameInOriginatingDB"]);
       }
-      if ($row["trm_IDInOriginatingDB"]) {
+      if (@$row["trm_IDInOriginatingDB"]) {
         makeTag('idInOriginalDB', null, $row["trm_IDInOriginatingDB"]);
       }
-      if ($row["trm_Modified"]) {
+      if (@$row["trm_Modified"]) {
         makeTag('modified', null, $row["trm_Modified"]);
       }
-      closeTag('term');
+      closeTag('termdef');
   }
   closeTag('terms');
 }

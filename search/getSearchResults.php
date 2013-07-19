@@ -196,7 +196,7 @@
 		}
 		if (! $memcache) {
 			$memcache = new Memcache;
-			if (! $memcache->connect('localhost', MEMCACHED_PORT)) {	//saw Decision: error or just load raw???
+			if (! $memcache->connect('127.0.0.1', MEMCACHED_PORT)) {	//saw Decision: error or just load raw???
 				return array("error" => "couldn't connect to memcached");
 			}
 		}
@@ -222,7 +222,7 @@
 		global $memcache;
 		if (! $memcache) {
 			$memcache = new Memcache;
-			if (! $memcache->connect('localhost', MEMCACHED_PORT)) {
+			if (! $memcache->connect('127.0.0.1', MEMCACHED_PORT)) {
 				return array("error" => "couldn't connect to memcached");
 			}
 		}
