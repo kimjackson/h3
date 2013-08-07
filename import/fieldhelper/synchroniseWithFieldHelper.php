@@ -161,7 +161,7 @@ function update_counts(divid, processed, added, total) {
 				$dirs = explode(';', $mediaFolders); // get an array of folders
 
 				if($row1[1]==null){
-					$mediaExts = "jpg,jpeg,png,gif,doc,docx,mp4";
+					$mediaExts = "jpg,jpeg,png,gif,doc,docx,mp4,pdf,xslx,tif,tiff";
 					//array("jpg", "jpeg", "png", "gif", "doc", "docx", "mp4");
 				}else{
 					$mediaExts = $row1[1];

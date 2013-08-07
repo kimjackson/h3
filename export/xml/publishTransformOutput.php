@@ -52,7 +52,7 @@ if ($transformID) {
 	//check transform style exist in standard directory
 	$style = @$_REQUEST['style'] ? $_REQUEST['style'] : 'default';
 	if ( @$_REQUEST['styleFilename']) {
-		$styleFilename = $_REQUEST['styleFilename'];
+		$styleFilename = urldecode($_REQUEST['styleFilename']);
 	}else{
 		$styleFilename = "".HEURIST_XSL_TEMPLATES_DIR.$style.".xsl";
 		//set the style filename and check that it exist

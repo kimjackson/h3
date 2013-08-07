@@ -412,7 +412,7 @@ Temporal._typeFieldMap = {	s : {
         hdr : ["DVP","DVN","BCE","BPD","COD","DEV","DAT"]
     },
     p :	{
-        req : [["TPQ","TAQ"], ["PDB","PDE","TPQ","TAQ"]],
+        req : [["PDB","PDE","TPQ","TAQ"], ["TPQ","TAQ"]],
         opt : ["DET","SPF","EPF","COM","SRT"],
         hdr : ["PDB","PDE","TPQ","TAQ"]
     },
