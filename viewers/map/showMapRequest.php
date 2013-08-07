@@ -275,7 +275,7 @@ if(mysql_error()) {
 
 				$rec['error'] = "URL is not defined for image layer";
 
-			}else if($manifest_file){
+			}else if(@$manifest_file){
 
 				$manifest = simplexml_load_file($manifest_file);
 				if($manifest==null || is_string($manifest)){ //manifest not found

@@ -758,7 +758,7 @@ if (typeof mxn.LatLonPoint == "function") {
 
 						M.map.addTileLayer(tile_url, 0.75, layer.rec_ID, layer.min_zoom, layer.max_zoom, true);
 						//layer.min_zoom, layer.max_zoom, true);
-            M.map.getMap().mapTypes["roadmap"].maxZoom = layer.max_zoom;
+            M.map.getMap().mapTypes["roadmap"].maxZoom = layer.max_zoom + 1;
 						layer.extent = M.getImageLayerExtent(layer['extent']);
 /* DEBUG
 if(layer.extent){
