@@ -81,7 +81,7 @@
 
 	// find all matching records
 	$cols = "rec_ID as bibID, rec_RecTypeID as rectype, rec_Title as title, rec_URL as URL";
-	$query = REQUEST_to_query("select $cols ", $search_type);
+	$query = REQUEST_to_query("select $cols ", $search_type, $request);
 
 /*****DEBUG****/// error_log("query=".$query);
 
