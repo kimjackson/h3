@@ -665,6 +665,8 @@
 			ulf_ExternalFileReference as remoteURL,
 			ulf_Parameters as parameters,
 			concat(ulf_FilePath,ulf_FileName) as fullpath,
+      ulf_FileName as fileName,
+      ulf_FilePath as filePath,
 			ulf_PreferredSource as prefsource
 
 			from recUploadedFiles left join defFileExtToMimetype on ulf_MimeExt = fxm_Extension

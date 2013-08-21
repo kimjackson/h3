@@ -917,16 +917,16 @@ function outputRecordStub($recordStub) {
  * @uses      code_element_name description of use
  */
 function makeFileContentNode($file) {
-    $filename = $file['URL'];
     if ($file['mimeType'] === "application/xml") { // && file_exists($filename)) {
         if ($file['origName'] !== "_remote") {
-            $xml = simplexml_load_file($filename);
-            if (!$xml) {
-                makeTag('error', null, " Error while attemping to read $filename .");
-                return;
-            }
-            $xml = $xml->asXML();
+           $filename = $file['filePath'].$file['fileName'];
+           $xml = file_get_contents($filename);
+           if (!$xml) {
+              makeTag('error', null, " Error while attemping to read $filename .");
+              return;
+           }
         } else {
+            $filename = $file['URL'];
             $xml = loadRemoteURLContent($filename);
             if (!$xml) {
                 makeTag('error', null, " Error while attemping to read $filename .");
