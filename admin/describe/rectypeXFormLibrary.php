@@ -289,7 +289,7 @@ function buildform($rt_id) {
 				$termIDTree = $dettype[$di['dty_JsonTermIDTree']];
 				$disabledTermIDsList = $dettype[$di['dty_TermIDTreeNonSelectableIDs']];
 				$fieldLookup = ($baseType == "relation" ? $relnLookup : $termLookup);
-				$body = $body . "<$fieldtype appearance=\"minimal\" ref=\"" . $xpathPrefix . "dt" . $dt_id . "\">\n" . $inputDefBody . createTermSelect($termIDTree, $disabledTermIDsList, $fieldLookup, false, $ti) . "</$fieldtype>\n";
+				$body = $body . "<$fieldtype appearance=\"minimal\" ref=\"" . $xpathPrefix . "dt" . $dt_id . "\">\n" . $inputDefBody . createTermSelect($termIDTree, $disabledTermIDsList, $fieldLookup, $ti) . "</$fieldtype>\n";
 			}
 		} else if ($fieldtype == "binary") {
 			//todo check for sketch type
@@ -299,7 +299,7 @@ function buildform($rt_id) {
 		} else if ($fieldtype == "groupbreak") { // if we get to here we have a legitament sepearator so break
 			$body.= $groupSeparator;
 			$atGroupStart = true;
-		} else if ($dt_id == DT_COUNTER) { //we have a counter field so let's launch the Inventory Counter
+		} else if (!defined("DT_COUNTER") && $dt_id == DT_COUNTER) { //we have a counter field so let's launch the Inventory Counter
 			$body = $body . "<input appearance=\"ex:faims.android.INVENTORYCOUNT\" ref=\"" . $xpathPrefix . "dt$dt_id\">\n" . $inputDefBody . "</input>\n";
 		} else { //all others and  $fieldtype=="geopoint"  as well
 			$body = $body . "<input ref=\"" . $xpathPrefix . "dt$dt_id\">\n" . $inputDefBody . "</input>\n";
@@ -352,7 +352,10 @@ function createRecordLookup($rtIDs) {
  */
 function createTermSelect($termIDTree, $disabledTermIDsList, $termLocalLookup, $ti) {
 	$res = "";
-	$termIDTree = preg_replace("/[\}\{\:\"]/", "", $termIDTree); //remove unused structure characters
+  $termIDTree = preg_replace("/[\"]/", "", $termIDTree); //remove quotes
+  $termIDTree = preg_replace("/\:\{\}/", "", $termIDTree); //remove empty leaf array terminator
+  $termIDTree = preg_replace("/\:\{/", ",", $termIDTree); //change :{ sublist marker with comma
+  $termIDTree = preg_replace("/[\}\{]/", "", $termIDTree); //remove remaining braces
 	$termIDTree = explode(",", $termIDTree);
 	if (count($termIDTree) == 1) { //term set parent term, so expand to direct children
 		$childTerms = getTermOffspringList($termIDTree[0], false);

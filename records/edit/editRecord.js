@@ -2252,7 +2252,7 @@ s
         if (! searchValue) searchValue = element.textElt.value;
         var url = top.HEURIST.basePath+"records/pointer/selectRecordFromSearch.html?q="+encodeURIComponent(searchValue) +
         (top.HEURIST.database && top.HEURIST.database.name ? "&db="+top.HEURIST.database.name:"") +
-        "&target_recordtype="+top.HEURIST.edit.record.rectypeID;
+        ( top.HEURIST.edit.record ? "&target_recordtype="+top.HEURIST.edit.record.rectypeID:"");
         if (element.input.constrainrectype)
             url += "&t="+element.input.constrainrectype;
         top.HEURIST.util.popupURL(window, url, {

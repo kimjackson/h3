@@ -347,7 +347,7 @@ function initmap(map_div_id, geovalue){
   }
   else {
     var pos = new google.maps.LatLng(-33.88889, 151.18956);
-    map.setZoom(16);
+    map.setZoom(22);
     map.setCenter(pos);
     if(toolID == 5 && markerShape==null) drawPointMarker(pos);
   }
@@ -2226,12 +2226,13 @@ function zoomToBounds(bounds) {
   map.panToBounds(bounds);
 
   var zoom = map.getZoom();
-  if(zoom < 1 || zoom > 14){
+  if(zoom < 1 || zoom > 22){
     if (zoom < 1) zoom = 1;
-    else if (zoom > 14) zoom = 14;
+    else if (zoom > 22) zoom = 22;
     map.setZoom(zoom);
   }else{
-    map.setZoom(zoom-1);
+//    map.setZoom(zoom-1);
+    map.setZoom(22);
   }
 }
 

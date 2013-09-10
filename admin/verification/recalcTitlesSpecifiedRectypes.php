@@ -138,7 +138,7 @@ function update_counts2(processed, total) {
 $blanks = array();
 $reparables = array();
 foreach ($recs as $rec_id => $bib) {
-	if ($rec_id % 10 == 0) {
+	if ($rec_id % 200 == 0) {
 		print '<script type="text/javascript">update_counts('.$processed_count.','.$blank_count.','.$repair_count.','.count($updates).')</script>'."\n";
 		ob_flush();
 		flush();
@@ -175,7 +175,7 @@ foreach ($recs as $rec_id => $bib) {
 
 	print ' <a target=_blank href="'.HEURIST_BASE_URL.'records/edit/editRecord.html?recID='.$rec_id.'&db='.HEURIST_DBNAME.'">*</a> <br> <br>';
 
-	if ($rec_id % 10 == 0) {
+	if ($rec_id % 200 == 0) {
 		ob_flush();
 		flush();
 	}
@@ -200,7 +200,7 @@ if (count($updates) > 0) {
 */
 		mysql_query('update Records set rec_Title="'.addslashes($new_title).'" where rec_ID='.$rec_id);
 		++$i;
-		if ($rec_id % 10 == 0) {
+		if ($rec_id % 200 == 0) {
 			print '<script type="text/javascript">update_counts2('.$i.','.count($updates).')</script>'."\n";
 			ob_flush();
 			flush();

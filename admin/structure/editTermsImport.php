@@ -151,38 +151,38 @@ function upload_termsfile($parent_id, $domain, $has_codes, $has_descr) {
 	$parsed = array();
 
 	$row = 0;
-	if (($handle = fopen($filename, "r")) !== FALSE) {
-    	while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-        	$num = count($data);
-        	if($num>0){
-        		if($has_codes){
-        			$code = substr(trim($data[0]), 0, 99);
-        			$ind = 1;
-				}else{
-					$code = '';
-        			$ind = 0;
-				}
+  if (($handle = fopen($filename, "r")) !== FALSE) {
+    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+      $num = count($data);
+      if($num>0){
+        if($has_codes){
+          $code = substr(trim($data[0]), 0, 99);
+          $ind = 1;
+        }else{
+          $code = '';
+          $ind = 0;
+        }
 
-				if($num>$ind){
+        if($num>$ind){
 
-        			$label = substr(trim($data[$ind]), 0, 399);
-        			$len = strlen($label);
-        			if($len>0 && $len<400){
-						$desc = "";
-						if($has_descr){
-							$ind++;
-        					for ($c=$ind; $c < $num; $c++) {
-        						if($c>1) $desc = $desc.",";
-        						$desc = $desc.$data[$c];
-        					}
-						}
-        				array_push($parsed, array($code, $label,substr($desc, 0, 999),$domain,$parent_id,1));
-        				$row++;
-					}
-				}
-			}
-    	}
-	}
+          $label = substr(trim($data[$ind]), 0, 399);
+          $len = strlen($label);
+          if($len>0 && $len<400){
+            $desc = "";
+            if($has_descr){
+              $ind++;
+              for ($c=$ind; $c < $num; $c++) {
+                if($c>($ind +1)) $desc = $desc.",";
+                $desc = $desc.$data[$c];
+              }
+            }
+            array_push($parsed, array($code, $label,substr($desc, 0, 999),$domain,$parent_id,1));
+            $row++;
+          }
+        }
+      }
+    }
+  }
 	if($handle){
    		fclose($handle);
 	}

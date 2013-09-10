@@ -39,7 +39,7 @@ if (typeof mxn.LatLonPoint == "function") {
 		marker_1:null, marker_2:null, //for debug
 
 		defaultCenter: new mxn.LatLonPoint(-33.888, 151.19),
-		defaultZoom: 14,
+		defaultZoom: 19,
 
 		timeZoomSteps : window["Timeline"] ? [
 			{ pixelsPerInterval: 200,  unit: Timeline.DateTime.DAY },
@@ -744,8 +744,8 @@ if (typeof mxn.LatLonPoint == "function") {
 
 					//it tile_url is defined - add this layer to mapstraction
 					if(tile_url){
-						layer.min_zoom = new Number(layer.min_zoom);
-						layer.max_zoom = new Number(layer.max_zoom);
+						layer.min_zoom = parseInt(layer.min_zoom);
+						layer.max_zoom = parseInt(layer.max_zoom);
 						if(isNaN(layer.max_zoom)) {
 							layer.max_zoom = 19;
 						}
