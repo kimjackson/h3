@@ -44,15 +44,15 @@ $dbHost = ""; // required
 // MySQL user with full write (create) access on this database server
 // The default installation of MySql gives you "root" as the master user with whatever password you set up for this,
 // but you can specify another user and password with full access if preferred
-$dbAdminUsername = ""; // required
-$dbAdminPassword = ""; //required
+$dbAdminUsername = "rwH3"; // required
+$dbAdminPassword = "rw4all"; //required
 
 // MySQL user with readonly access on this database server
 // For example, if there is a user account "readonly" with a password "readonlypwd", then you would use:
 // $dbReadonlyUsername = "readonly";
 // $dbAReadonlyPassword = "readonlypwd";
-$dbReadonlyUsername = ""; // required
-$dbReadonlyPassword = ""; //required
+$dbReadonlyUsername = "roH3"; // required
+$dbReadonlyPassword = "ro4all"; //required
 
 // dbPrefix will be prepended to all database names so that you can easily distinguish Heurist databases on your database server
 // from other MySQL databases. Some Admin tools such as PHPMyAdmin will group databases with common prefixes ending in underscore
@@ -63,7 +63,7 @@ $dbPrefix = "hdb_"; // recommended
 // If the users of this server nearly always use a shared database eg. a workgroup database of web bookmarks, bibliographic or other research data,
 // specify its name here. DO NOT include the prefix, this will be added automatically.
 // If defaultDBName is blank, a list of available databases will be displayed on startup if none is specified
-$defaultDBname = ""; // may be left blank
+$defaultDBname = "dos_test"; // may be left blank
 
 // The HTTP address:port of teh proxy server that will allow access to the internet for external URI's
 // this address will allow heurist to request content through the firewall for general Internet URI's

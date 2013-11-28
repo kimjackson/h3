@@ -520,7 +520,7 @@ function outputRecord($record, &$reverse_pointers, &$relationships, $depth=0, $o
 				foreach ( $rel['details'][$relTrgDT] as $dtID => $to){
 					$toType = $to['type'];
 				}
-				if (in_array($fromType,$filter) || in_array($toType,$filter)) {
+				if (! $filter || in_array($fromType,$filter) || in_array($toType,$filter)) {
 					outputRecord($rel, $reverse_pointers, $relationships, $depth, $outputStub,$record['rec_ID']);
 			}
 			}
@@ -546,7 +546,7 @@ function outputRecordStub($recordStub) {
 function makeFileContentNode($file){
 //	$filename = HEURIST_UPLOAD_DIR ."/" . $file['id'];
 	$filename = $file['URL'];
-	if ($file['type'] ==="application/xml"){// && file_exists($filename)) {
+	if (@$file['type'] ==="application/xml"){// && file_exists($filename)) {
 		$xml = simplexml_load_file($filename);
 /*****DEBUG****///error_log(" xml = ". print_r($xml,true));
 		// convert to xml
@@ -639,8 +639,8 @@ function outputDetail($dt, $value, $rt, &$reverse_pointers, &$relationships, $de
 					makeTag('id', null, $file['id']);
 					makeTag('nonce', null, $file['nonce']);
 					makeTag('origName', null, $file['origName']);
-					makeTag('type', null, $file['type']);
-					makeTag('size', array('units' => 'kB'), $file['size']);
+					makeTag('type', null, @$file['type']);
+					makeTag('size', array('units' => 'kB'), @$file['size']);
 					makeTag('date', null, $file['date']);
 					makeTag('description', null, $file['description']);
 					makeTag('url', null, $file['URL']);
