@@ -269,6 +269,25 @@ foreach ($rec_types as $rec_type) {
 	}
 }
 
+
+$terms = (getTerms(true));
+
+$const = get_defined_constants(true);
+$userDefines = $const['user'];
+
+$magicNumbers = array('DEFAULT'=>0);
+
+$rtDefines = getRTDefineKeys();
+foreach ($rtDefines as $magicRTName) {
+	$magicNumbers[$magicRTName] = array_key_exists($magicRTName,$userDefines)?$userDefines[$magicRTName]:'';
+}
+
+$dtDefines = getDTDefineKeys();
+foreach ($dtDefines as $magicDTName) {
+	$magicNumbers[$magicDTName] = array_key_exists($magicDTName,$userDefines)?$userDefines[$magicDTName]:'';
+}
+
+
 $commonData = array(
 	"users" => $users,
 	"workgroups" => $workgroups,
@@ -280,7 +299,9 @@ $commonData = array(
 						"5"=>"*****"),
 	"recordTypes" => $recordTypes,
 	"detailTypes" => $detailTypes,
-	"detailRequirements" =>$detailRequirements
+	"detailRequirements" =>$detailRequirements,
+	"terms" => $terms,
+	"magicNumbers" => $magicNumbers
 );
 if (! @$_REQUEST["json"]) {
 	print "var HAPI_commonData = ";

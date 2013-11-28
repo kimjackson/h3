@@ -727,9 +727,9 @@ var HRecord = function() {
 		var detailID = bits.pop();
 		var refID = bits.pop();
 
-		if (top.HEURIST.magicNumbers && top.HEURIST.magicNumbers['DT_CREATOR'] && refID === top.HEURIST.magicNumbers['DT_CREATOR']) {
+		if (HAPI_commonData.magicNumbers && HAPI_commonData.magicNumbers['DT_CREATOR'] && refID === HAPI_commonData.magicNumbers['DT_CREATOR']) {
 			// an AuthorEditor
-			var surnameDT =(top.HEURIST.magicNumbers && top.HEURIST.magicNumbers['DT_GIVEN_NAMES']?top.HEURIST.magicNumbers['DT_GIVEN_NAMES']:0);
+			var surnameDT =(HAPI_commonData.magicNumbers && HAPI_commonData.magicNumbers['DT_GIVEN_NAMES']?HAPI_commonData.magicNumbers['DT_GIVEN_NAMES']:0);
 			if (values.length === 1) {
 				if (! values[0]) { return (detailID === surnameDT)? "Anonymous" : ""; }
 				else { return values[0]; }
@@ -1665,15 +1665,15 @@ var HRelationship = function(primaryRecord, relationshipType, secondaryRecord) {
 
 	if (! HRelationship.PrimaryRecordType) {
 		/* Keep a static storage of the types essential to a relationship record */
-		HRelationship.PrimaryRecordType = HDetailManager.getDetailTypeById(top.HEURIST.magicNumbers['DT_PRIMARY_RESOURCE']);
-		HRelationship.SecondaryRecordType = HDetailManager.getDetailTypeById(top.HEURIST.magicNumbers['DT_TARGET_RESOURCE']);
+		HRelationship.PrimaryRecordType = HDetailManager.getDetailTypeById(HAPI_commonData.magicNumbers['DT_PRIMARY_RESOURCE']);
+		HRelationship.SecondaryRecordType = HDetailManager.getDetailTypeById(HAPI_commonData.magicNumbers['DT_TARGET_RESOURCE']);
 	}
 	if (! HRelationship.RelationshipTypeType) {
-		HRelationship.RelationshipTypeType = HDetailManager.getDetailTypeById(top.HEURIST.magicNumbers['DT_RELATION_TYPE']);
+		HRelationship.RelationshipTypeType = HDetailManager.getDetailTypeById(HAPI_commonData.magicNumbers['DT_RELATION_TYPE']);
 		HRelationship.relatedEnums = HRelationship.RelationshipTypeType.getRelatedEnumerationValues();
 	}
 
-	this.setRecordType(HRecordTypeManager.getRecordTypeById(top.HEURIST.magicNumbers['RT_RELATION']));
+	this.setRecordType(HRecordTypeManager.getRecordTypeById(HAPI_commonData.magicNumbers['RT_RELATION']));
 
 	if (arguments) {
 		try { this.addDetail(HRelationship.PrimaryRecordType, primaryRecord); }
@@ -1697,7 +1697,7 @@ HAPI.inherit(HRelationship, HRecord);
 HRelationship.getClass = function() { return "HRelationship"; };
 HRelationship.getRelationshipTypes = function() {
 	if (! HRelationship.RelationshipTypeType) {
-		HRelationship.RelationshipTypeType = HDetailManager.getDetailTypeById(top.HEURIST.magicNumbers['DT_RELATION_TYPE']);
+		HRelationship.RelationshipTypeType = HDetailManager.getDetailTypeById(HAPI_commonData.magicNumbers['DT_RELATION_TYPE']);
 	}
 	return HRelationship.RelationshipTypeType.getEnumerationValues();
 };
@@ -1919,10 +1919,10 @@ var HDetailType = function(id, name, prompt, variety, enums, constraint) {
 
 			// related values are given as well; enums is an array of string-string pairs
 			// enum(trmID,trmLabel,[invID, invLabel])
-			if (top.HEURIST && typeof top.HEURIST.terms != "undefined"){
-				ciIndex = top.HEURIST.terms.fieldNamesToIndex['trm_ConceptID'];
-				enumLookup = top.HEURIST.terms.termsByDomainLookup['enum'];
-				relLookup = top.HEURIST.terms.termsByDomainLookup['relation'];
+			if (HAPI_commonData && typeof HAPI_commonData.terms != "undefined"){
+				ciIndex = HAPI_commonData.terms.fieldNamesToIndex['trm_ConceptID'];
+				enumLookup = HAPI_commonData.terms.termsByDomainLookup['enum'];
+				relLookup = HAPI_commonData.terms.termsByDomainLookup['relation'];
 
 				for (i=0; i < enums.length; ++i) {
 					_enums.push(enums[i][1]);
@@ -3403,7 +3403,7 @@ var HeuristScholarDB = new HStorageManager();
 				// first sweep: create place-holder records
 				id = parseInt(response.records[i][0]);
 				if (! (record = that.getRecord(id))) {
-					if (parseInt(response.records[i][2]) !== top.HEURIST.magicNumbers['RT_RELATION']) {	// saw TODO need to add check for rectype relation
+					if (parseInt(response.records[i][2]) !== HAPI_commonData.magicNumbers['RT_RELATION']) {	// saw TODO need to add check for rectype relation
 						record = new HRecord();
 					}
 					else {
