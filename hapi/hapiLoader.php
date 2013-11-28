@@ -61,7 +61,6 @@ header("Content-type: text/javascript");
 $instance = (@$_REQUEST["db"] ? $_REQUEST["db"]:"");
 
 $scripts = array(
-	HEURIST_BASE_URL . "common/php/getMagicNumbers.php?db=".$instance,
 //	HAPI_HOME . "php/loadHapiCommonInfo.php?key=" . addslashes($_REQUEST["key"])."&db=".$instance,
 //	HAPI_HOME . "php/loadHapiUserInfo.php?key=" . addslashes($_REQUEST["key"])."&db=".$instance,
 	HAPI_HOME . "php/loadHapiCommonInfo.php?db=".$instance,
