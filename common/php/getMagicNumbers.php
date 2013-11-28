@@ -30,6 +30,7 @@
 * @subpackage  !!!subpackagename for file such as Administration, Search, Edit, Application, Library
 */
 
+header("Content-Type: text/javascript");
 
 require_once(dirname(__FILE__)."/../config/initialise.php");
 
