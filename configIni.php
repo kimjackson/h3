@@ -63,7 +63,7 @@ $dbPrefix = "hdb_"; // recommended
 // If the users of this server nearly always use a shared database eg. a workgroup database of web bookmarks, bibliographic or other research data,
 // specify its name here. DO NOT include the prefix, this will be added automatically.
 // If defaultDBName is blank, a list of available databases will be displayed on startup if none is specified
-$defaultDBname = "dos_test"; // may be left blank
+$defaultDBname = "dos"; // may be left blank
 
 // The HTTP address:port of teh proxy server that will allow access to the internet for external URI's
 // this address will allow heurist to request content through the firewall for general Internet URI's
