@@ -40,7 +40,7 @@
     $record_annotation = null;
 
 	if(is_numeric($rec_id)){
-        if(!$db_selected){
+        if(!isset($db_selected) || !$db_selected){
             $db_selected = mysql_connection_select();
         }
 		$record = getRecordFull($rec_id);
