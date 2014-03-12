@@ -68,6 +68,10 @@
 	}
 ?>
 	<p class="attribution">
+			<?=makeMediaDateStatement($record) ?>
+	</p>
+
+	<p class="attribution">
 			<?=makeMediaAttributionStatement($record) ?>
 	</p>
 

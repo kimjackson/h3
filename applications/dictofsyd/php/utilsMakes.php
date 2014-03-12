@@ -1030,6 +1030,23 @@ function makeSubjectItem($entries){
 }
 
 /**
+* Render media date info
+*
+* @param Record $record
+*/
+function makeMediaDateStatement(Record $record){
+
+	$out = '';
+	if($record->getDet(DT_DATE_START)){
+		$out = $out.$record->getDet(DT_DATE_START);
+	}
+	if($record->getDet(DT_DATE_END)){
+		$out = $out.' - '.$record->getDet(DT_DATE_END);
+	}
+	return $out;
+}
+
+/**
 * Render media attribution
 *
 * @param Record $record
