@@ -352,6 +352,9 @@ function makeTimeMap(Record $record){
 				if($factoid->getDet(DT_FACTOID_SOURCE,'ref')){
 					$title = $title." - ".$factoid->getDet(DT_FACTOID_SOURCE,'ref');
 				}
+				else if($factoid->getDet(DT_FACTOID_TARGET,'ref')){
+					$title = $title." - ".$factoid->getDet(DT_FACTOID_TARGET,'ref');
+				}
 				}else{
 					$title = $record->getDet(DT_NAME);
 				}
