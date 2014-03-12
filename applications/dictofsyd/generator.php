@@ -34,6 +34,8 @@
     * @subpackage  applications
     */
 
+    set_time_limit(0);
+
     require_once(dirname(__FILE__)."/php/incvars.php");
     require_once(dirname(__FILE__)."/php/utilsFile.php");
     require_once(dirname(__FILE__)."/php/Record.php");
