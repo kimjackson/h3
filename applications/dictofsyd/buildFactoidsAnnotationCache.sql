@@ -1,4 +1,3 @@
-        use hdb_DoS3;
         DROP TABLE IF EXISTS `recFacctoidsCache`;
         CREATE TABLE `recFacctoidsCache` (
 
