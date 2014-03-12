@@ -29,14 +29,14 @@
     */
 
     $featureNames = array(
-        RT_WEBLINK	=> array("link",	"Links"),
-        RT_MEDIA	=> array("media",	"Media"),
-        RT_ENTRY	=> array("entry",	"Entries"),
-        RT_ROLE 	=> array("role",	"Roles"),
-        RT_MAP 		=> array("map",		"Maps"),
-        RT_TERM 	=> array("term",	"Subjects"),
-        RT_CONTRIBUTOR	=> array("contributor",	"Contributors"),
-        RT_ANNOTATION	=> array("annotation",	"Mentioned in")
+        RT_WEBLINK      => array("link",         "Links"),
+        RT_MEDIA        => array("multimedia",   "Multimedia",    "multimedia"),
+        RT_ENTRY        => array("entry",        "Entries",       "entries"),
+        RT_ROLE         => array("role",         "Roles",         "roles"),
+        RT_MAP          => array("map",          "Maps",          "maps"),
+        RT_TERM         => array("term",         "Subjects",      "subjects"),
+        RT_CONTRIBUTOR  => array("contributor",  "Contributors",  "contributors"),
+        RT_ANNOTATION   => array("annotation",   "Mentioned in")
     );
 
     /*$featureTypeCodes = array(
@@ -62,14 +62,14 @@
     $typeValues = array(
 
         //entities
-        3291 => array("artefact"	,	"Artefacts"),
-        3294 => array("building"	,	"Buildings"),
-        3296 => array("event"   	,	"Events"),
-        3298 => array("natural" 	,	"Natural features"),
-        3300 => array("organisation",	"Organisations"),
-        3301 => array("person"  	,	"People"),
-        3302 => array("place"		,	"Places"),
-        3305 => array("structure"	,	"Structures"),
+        3291 => array("artefact",      "Artefacts",         "artefacts"),
+        3294 => array("building",      "Buildings",         "buildings"),
+        3296 => array("event",         "Events",            "events"),
+        3298 => array("natural",       "Natural features",  "natural"),
+        3300 => array("organisation",  "Organisations",     "organisations"),
+        3301 => array("person",        "People",            "people"),
+        3302 => array("place",         "Places",            "places"),
+        3305 => array("structure",     "Structures",        "structures"),
 
         //roles
         3322 => "Milestone",
@@ -176,6 +176,28 @@
         foreach ($typeValues as $code=>$name){
             if($code==$_code && is_array($name)){
                 return $name[$plural?1:0];
+            }
+        }
+        return null;
+    }
+
+    function getBrowsePathName ($typename) {
+
+        global $featureNames, $typeValues;
+
+        if(is_numeric($typename)){
+            return $typename;
+        }
+
+        foreach ($featureNames as $code=>$name){
+            if(is_array($name) && $name[0]==$typename){
+                return $name[2];
+            }
+        }
+
+        foreach ($typeValues as $code=>$name){
+            if(is_array($name) && $name[0]==$typename){
+                return $name[2];
             }
         }
         return null;
@@ -345,7 +367,7 @@
                 $res = @$featureNames[$this->type()];
             }
             if($res){
-                return array_pop($res);
+                return $res[1];
             }
             return null;
         }

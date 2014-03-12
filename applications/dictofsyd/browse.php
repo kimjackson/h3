@@ -46,7 +46,7 @@
   		if($type_name){
   				$g_title = 'Browse - '.$type_name;
 	              $class_name = getNameByCode($type);
-	              if($class_name=="media") {
+	              if($class_name=="multimedia") {
 	                  $class_name = "image";
 	              }
 
@@ -124,46 +124,46 @@
 		<h3>Browse</h3>
 		<ul id="menu">
 		<li class="browse-artefact">
-		<a href="<?=$urlbase?>browse/artefact">Artefacts</a>
+		<a href="<?=$urlbase?>browse/artefacts">Artefacts</a>
 		</li>
 		<li class="browse-building">
-		<a href="<?=$urlbase?>browse/building">Buildings</a>
+		<a href="<?=$urlbase?>browse/buildings">Buildings</a>
 		</li>
 		<li class="browse-event">
-		<a href="<?=$urlbase?>browse/event">Events</a>
+		<a href="<?=$urlbase?>browse/events">Events</a>
 		</li>
 		<li class="browse-natural">
 		<a href="<?=$urlbase?>browse/natural">Natural features</a>
 		</li>
 		<li class="browse-organisation">
-		<a href="<?=$urlbase?>browse/organisation">Organisations</a>
+		<a href="<?=$urlbase?>browse/organisations">Organisations</a>
 		</li>
 		<li class="browse-person">
-		<a href="<?=$urlbase?>browse/person">People</a>
+		<a href="<?=$urlbase?>browse/people">People</a>
 		</li>
 		<li class="browse-place">
-		<a href="<?=$urlbase?>browse/place">Places</a>
+		<a href="<?=$urlbase?>browse/places">Places</a>
 		</li>
 		<li class="browse-structure">
-		<a href="<?=$urlbase?>browse/structure">Structures</a>
+		<a href="<?=$urlbase?>browse/structures">Structures</a>
 		</li>
 		<li class="browse-entry">
-		<a href="<?=$urlbase?>browse/entry">Entries</a>
+		<a href="<?=$urlbase?>browse/entries">Entries</a>
 		</li>
 		<li class="browse-map">
-		<a href="<?=$urlbase?>browse/map">Maps</a>
+		<a href="<?=$urlbase?>browse/maps">Maps</a>
 		</li>
 		<li class="browse-image">
-		<a href="<?=$urlbase?>browse/media">Multimedia</a>
+		<a href="<?=$urlbase?>browse/multimedia">Multimedia</a>
 		</li>
 		<li class="browse-term">
-		<a href="<?=$urlbase?>browse/term">Subjects</a>
+		<a href="<?=$urlbase?>browse/subjects">Subjects</a>
 		</li>
 		<li class="browse-role">
-		<a href="<?=$urlbase?>browse/role">Roles</a>
+		<a href="<?=$urlbase?>browse/roles">Roles</a>
 		</li>
 		<li class="browse-contributor">
-		<a href="<?=$urlbase?>browse/contributor">Contributors</a>
+		<a href="<?=$urlbase?>browse/contributors">Contributors</a>
 		</li>
 		</ul>
 	</div>

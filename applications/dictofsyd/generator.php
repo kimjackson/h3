@@ -289,7 +289,7 @@
                         "structure",
                         "entry",
                         "map",
-                        "media",
+                        "multimedia",
                         "role",
                         "term",
                         "contributor");
@@ -315,7 +315,7 @@
                         "3305"=>"structure",
                         "13"=>"entry",
                         "28"=>"map",
-                        "5"=>"media",
+                        "5"=>"multimedia",
                         "27"=>"role",
                         "29"=>"term",
                         "24"=>"contributor");
@@ -331,8 +331,9 @@
                     require("browse.php");
                     $out = ob_get_clean();
                     if($out){
-                        saveAsFile($out, $path_browse."/".$ftype);
-                        echo "Browse: <a href='".$deployurl."browse/".$ftype."'>".$ftype."</a><br/>";
+			$browse_path_name = getBrowsePathName($ftype);
+                        saveAsFile($out, $path_browse."/".$browse_path_name);
+                        echo "Browse: <a href='".$deployurl."browse/".$browse_path_name."'>".$browse_path_name."</a><br/>";
                     }else{
                         //report error
                         echo "error ".$ftype."<br/>";
