@@ -66,22 +66,41 @@
 
                 // narrow terms
 
-                $ids = getRecordsForIn('SELECT group_concat(r1.rrc_SourceRecID) FROM recRelationshipsCache r1 where r1.rrc_TargetRecID='.$rec_id);
+                $ids = getRecordsForIn('SELECT group_concat(rrc_RecID) FROM recRelationshipsCache where rrc_SourceRecID='.$rec_id.' or rrc_TargetRecID='.$rec_id);
                 if($ids){
-                    $query = 'select d.dtl_RecID as rec_id, '.RT_TERM.' as rectype, '.
-                    'd.dtl_DetailTypeID as dttype, d.dtl_Value as dtvalue, 2 as ref from Records r, recDetails d '.
-                    'where r.rec_RecTypeID='.RT_TERM.' and r.rec_ID=d.dtl_RecID and r.rec_ID in ('.$ids.') and d.dtl_DetailTypeID='.DT_NAME;
+                    $query = 'select
+				reltarget.dtl_Value as rec_id,
+				'.RT_TERM.' as rectype,
+				'.DT_NAME.' as dttype,
+				targetname.dtl_Value as dtvalue,
+				if (reltarget.dtl_DetailTypeID = '.DT_RELATION_TARGET.', 2, 1) as ref,
+				reltypename.trm_Label as reltype
+			from
+				recDetails reltarget
+				left join recDetails targetname
+					on targetname.dtl_RecID=reltarget.dtl_Value
+					and targetname.dtl_DetailTypeID = '.DT_NAME.'
+				left join recDetails reltype
+					on reltype.dtl_RecID = reltarget.dtl_RecID
+					and reltype.dtl_DetailTypeID = '.DT_RELATION_TYPE.'
+				left join defTerms reltypename
+					on if (reltarget.dtl_DetailTypeID = '.DT_RELATION_TARGET.', reltypename.trm_ID=reltype.dtl_Value, reltypename.trm_InverseTermID=reltype.dtl_Value)
+			where
+				reltarget.dtl_RecID in ('.$ids.')
+				and (reltarget.dtl_DetailTypeID = '.DT_RELATION_SOURCE.' or reltarget.dtl_DetailTypeID = '.DT_RELATION_TARGET.')
+				and reltarget.dtl_Value != '.$rec_id;
+
                     addRelations($record, false, $query);
                 }
 
                 // broader terms
-                $ids = getRecordsForIn('SELECT group_concat(r1.rrc_TargetRecID) FROM recRelationshipsCache r1 where r1.rrc_SourceRecID='.$rec_id);
-                if($ids){
-                    $query = 'select d.dtl_RecID as rec_id, '.RT_TERM.' as rectype, '.
-                    'd.dtl_DetailTypeID as dttype, d.dtl_Value as dtvalue, 1 as ref from Records r, recDetails d '.
-                    'where r.rec_RecTypeID='.RT_TERM.' and r.rec_ID=d.dtl_RecID and r.rec_ID in ('.$ids.') and d.dtl_DetailTypeID='.DT_NAME;
-                    addRelations($record, false, $query);
-                }
+//                $ids = getRecordsForIn('SELECT group_concat(r1.rrc_TargetRecID) FROM recRelationshipsCache r1 where r1.rrc_SourceRecID='.$rec_id);
+//                if($ids){
+//                    $query = 'select d.dtl_RecID as rec_id, '.RT_TERM.' as rectype, '.
+//                    'd.dtl_DetailTypeID as dttype, d.dtl_Value as dtvalue, 1 as ref from Records r, recDetails d '.
+//                    'where r.rec_RecTypeID='.RT_TERM.' and r.rec_ID=d.dtl_RecID and r.rec_ID in ('.$ids.') and d.dtl_DetailTypeID='.DT_NAME;
+//                    addRelations($record, false, $query);
+//                }
 
                 //related features
                 $ids = getRecordsForIn('SELECT r1.rrc_SourceRecID as recid FROM recRelationshipsCache r1 where r1.rrc_TargetRecID='.$rec_id.' union '.
@@ -408,7 +427,6 @@
             $stime = $stime[1] + $stime[0];
         }
 
-
         $res2 = mysql_query($query);
 
         $f_record = null;
@@ -417,7 +435,8 @@
             if($f_record==null || $f_record->id() != $row2['rec_id']){
                 $f_record = new Record();
                 $f_record->init( array("rec_id"=>$row2['rec_id'], "rectype"=>($rectype?$rectype:$row2['rectype']) ) );
-                $record->addRelation($f_record);
+                $reltype = $row2['reltype'];
+                $record->addRelation($f_record, $reltype);
             }
 
             if($parseRef && @$row2['ref'] ){//remove enity type name from recTitle

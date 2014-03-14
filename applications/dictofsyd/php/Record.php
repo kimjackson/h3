@@ -212,6 +212,7 @@
         private $header = array();
         private $details = array();
         private $relations = array();
+        private $relationsByType = array();
 
         public function init($arr){
             $this->header = $arr;
@@ -392,8 +393,14 @@
         // related records-------------------------------------
 
 
-        public function addRelation(Record $frec){
+        public function addRelation(Record $frec, $reltype=null){
             $this->relations[$frec->id()] = $frec;
+            if ($reltype) {
+                if (! $this->relationsByType[$reltype]) {
+                    $this->relationsByType[$reltype] = array();
+                }
+                $this->relationsByType[$reltype][$frec->id()] = $frec;
+            }
         }
 
         public function getRelationRecords(){
@@ -436,6 +443,16 @@
                         $res[$id] = $record;
                     }
                 }
+            }
+            return $res;
+        }
+
+        function getRelationRecordByReltype($type, $reltype){
+
+            $res = array();
+
+            if($type && $reltype){
+                return $this->relationsByType[$reltype];
             }
             return $res;
         }

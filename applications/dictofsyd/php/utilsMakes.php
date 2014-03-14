@@ -965,12 +965,12 @@ function makeConnectionMenuItem($entries){
 
 function makeTermsMenuItem($record, $type){
 
-	$entries = $record->getRelationRecordByRef(RT_TERM, $type);
+	$entries = $record->getRelationRecordByReltype(RT_TERM, $type);
 	if(count($entries)>0){
 
 		$entry0 = reset($entries);
 
-		$title = ($type==1)?"Broader subjects":"Narrower subjects";
+		$title = ($type=="HasBroaderTerm")?"Broader subjects":"Narrower subjects";
 		$classname = $record->type_classname();
 
 		uasort($entries, 'sort_byname');

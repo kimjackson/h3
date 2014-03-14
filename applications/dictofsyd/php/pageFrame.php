@@ -107,8 +107,8 @@ require('incheader.php');
 
 	if($record->type()==RT_TERM){
 		print '<div id="connections"><h3>Connections</h3>';
-			makeTermsMenuItem($record, 1);
-			makeTermsMenuItem($record, 2);
+			makeTermsMenuItem($record, "HasBroaderTerm");
+			makeTermsMenuItem($record, "HasNarrowerTerm");
 		print '</div>';
 
 	}else if($record->type()!=RT_CONTRIBUTOR && $record->type()!=RT_ROLE){
