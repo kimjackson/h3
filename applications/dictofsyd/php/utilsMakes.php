@@ -175,7 +175,7 @@ function getImageTag(Record $record, $classname=null, $type=null){
 		}
 
         if($url){
-		    $out = '<img '.$classname.' '.$size.' alt="'.$record->getDet(DT_NAME).'"src="'.$url.'"></img>';
+		    $out = '<img '.$classname.' '.$size.' alt="'.$record->getDet(DT_NAME).'" src="'.$url.'"></img>';
         }else{
             $out = $record->getDet(DT_NAME);
         }

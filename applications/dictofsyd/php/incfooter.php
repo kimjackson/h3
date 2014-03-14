@@ -63,15 +63,14 @@
 </div>
 </div>
 <div id="previews"></div>
-<div style="background-color: #fff;">
+
 <?php
 if( (!$is_generation) && isset($starttime)){
 	$mtime = explode(' ', microtime());
 	$totaltime = $mtime[0] + $mtime[1] - $starttime;
-	printf($query_times.' Page generated in %.3f seconds.', $totaltime);
+	printf('<div style="background-color: #fff;">'.$query_times.' Page generated in %.3f seconds.</div>', $totaltime);
 }
 ?>
-</div>
 <!--
 <script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script><script type="text/javascript">
 				try {
@@ -80,7 +79,7 @@ if( (!$is_generation) && isset($starttime)){
 				} catch(err) {}
 </script>                
 -->                
-			</script><script src="http://s7.addthis.com/js/250/addthis_widget.js#pub=dictionaryofsydney" type="text/javascript"></script><script type="text/javascript">
+			<script src="http://s7.addthis.com/js/250/addthis_widget.js#pub=dictionaryofsydney" type="text/javascript"></script><script type="text/javascript">
 				var addthis_config = {
 					services_exclude: 'myaol'
 				}

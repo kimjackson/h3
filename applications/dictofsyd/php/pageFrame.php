@@ -79,10 +79,10 @@ require('incheader.php');
 	</div>
 </div>
 <div id="right-col">
-	<a title="Dictionary of Sydney" href="<?=($startupurl==''?'./':$startupurl)?>"><img class="logo" height="125" width="198" alt="Dictionary of Sydney" src="<?=$urlbase?>images/img-logo.jpg"></a>
+	<a title="Dictionary of Sydney" href="<?=($startupurl==''?'./':$startupurl)?>"><img class="logo" height="125" width="198" alt="Dictionary of Sydney" src="<?=$urlbase?>images/img-logo.jpg"/></a>
 	<div id="search-bar">
         <form action="<?=$urlbase.($is_generation?'search/search.cgi':'search.php') ?>" method="get">
-			<input size="20" id="search" name="zoom_query" type="text">
+			<input size="20" id="search" name="zoom_query" type="text"/>
 			<div id="search-submit"></div>
 		</form>
 	</div>

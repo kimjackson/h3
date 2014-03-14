@@ -68,7 +68,7 @@
 
 		<div id="heading" class="title-<?=$class_name?>">
 			<h1>Browse <?=$type_name?></h1>
-			<span id="sub-title"/>
+			<span id="sub-title"></span>
 		</div>
 
 

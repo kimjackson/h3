@@ -27,29 +27,30 @@
 * @subpackage  applications
 */
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title><?=$g_title?></title>
-<meta content="width=device-width; initial-scale=1.0; maximum-scale=2.0; user-scalable=1;" name="viewport">
+<meta content="width=device-width; initial-scale=1.0; maximum-scale=2.0; user-scalable=1;" name="viewport"/>
 <?php
 if(isset($record)){
-    print '<meta name="id" content="'.$record->id().'">';
-    print '<meta name="class" content="'.$record->type_classname().'">';
+    print '<meta name="id" content="'.$record->id().'"/>';
+    print '<meta name="class" content="'.$record->type_classname().'"/>';
 }
 ?>
-<link type="image/x-icon" href="<?=$urlbase ?>images/favicon.ico" rel="icon">
-<link type="image/x-icon" href="<?=$urlbase ?>images/favicon.ico" rel="shortcut icon">
-<link type="text/css" href="<?=$urlbase ?>style.css" rel="stylesheet">
+<link type="image/x-icon" href="<?=$urlbase ?>images/favicon.ico" rel="icon"/>
+<link type="image/x-icon" href="<?=$urlbase ?>images/favicon.ico" rel="shortcut icon"/>
+<link type="text/css" href="<?=$urlbase ?>style.css" rel="stylesheet"/>
 
 <script type="text/javascript">
-					RelBrowser = {
-						baseURL: "<?=$urlbase ?>"
-					};
-				</script>
+	RelBrowser = {
+		baseURL: "<?=$urlbase ?>"
+	};
+</script>
               
                 
-<script src="<?=$urlbase ?>js/timemap.js/2.0.1/lib/jquery-1.6.2.min.js" type="text/javascript"/></script>
+<script type="text/javascript" src="<?=$urlbase ?>js/timemap.js/2.0.1/lib/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="<?=$urlbase ?>js/cookies.js"></script>
 <script type="text/javascript" src="<?=$urlbase ?>js/fontsize.js"></script>
 <script type="text/javascript" src="<?=$urlbase ?>js/history.js"></script>
@@ -93,8 +94,8 @@ if(isset($record)){
 	</style>
 <![endif]-->
 
-						<script type="text/javascript" src="<?=$urlbase ?>js/jquery.boxy.js" type="text/javascript"></script>
-						<script type="text/javascript" src="<?=$urlbase ?>js/popups.js" type="text/javascript"></script>
+						<script type="text/javascript" src="<?=$urlbase ?>js/jquery.boxy.js"></script>
+						<script type="text/javascript" src="<?=$urlbase ?>js/popups.js"></script>
 
 <?php
 if($record->type()==RT_ENTITY || $record->type()==RT_MAP){
