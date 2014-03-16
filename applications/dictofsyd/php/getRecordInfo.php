@@ -49,14 +49,13 @@
                 //find contributor records
 
 
-                $ids = getRecordsForIn('select group_concat(distinct rd.dtl_RecID) from recDetails rd where '.
+                $ids = getRecordsForIn('select distinct rd.dtl_RecID from recDetails rd where '.
                     ' rd.dtl_DetailTypeID='.DT_CONTRIBUTOR_REF.' and rd.dtl_Value='.$rec_id);
                 if($ids){
 
                     $query = 'select d.dtl_RecID as rec_id, r.rec_RecTypeID as rectype, d.dtl_DetailTypeID as dttype, d.dtl_Value as dtvalue from Records r, recDetails d '.
                     ' where r.rec_RecTypeID in ('.RT_ENTRY.','.RT_MEDIA.','.RT_TILEDIMAGE.')
                     and r.rec_ID=d.dtl_RecID and r.rec_ID in ('.$ids.') and d.dtl_DetailTypeID in ('.DT_NAME.','.DT_TYPE_MIME.','.DT_TILEDIMAGE_TYPE.')';
-
                     addRelations($record, false, $query);
                 }
 
