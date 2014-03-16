@@ -97,7 +97,7 @@
 
 				<p>
 					<?=($record->type()==RT_TILEDIMAGE)?'This is a high-resolution image - to view in more detail, go to the ':''?>
-                    <?=getLinkTag3(RT_MEDIA, "noclass", "full record &#187;", $record->id() ) ?>
+                    <?=getLinkTag3($record->type(), "noclass", $record->getDet(DT_TYPE_MIME), "full record &#187;", $record->id() ) ?>
 				</p>
 				<div class="clearfix"></div>
 			</div>

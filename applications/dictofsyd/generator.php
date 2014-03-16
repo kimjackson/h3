@@ -79,10 +79,11 @@
                     " where r.rec_RecTypeID=".RT_ROLE." and r.rec_ID=d.dtl_RecID and d.dtl_DetailTypeID=".DT_ROLE_TYPE." and d.dtl_Value=3324";
 
                 }else { // all other records
-                    $where = ", d.dtl_Value as enttype, d2.dtl_Value as rname, d3.dtl_Value as roletype from Records r ".
+                    $where = ", d.dtl_Value as enttype, d2.dtl_Value as rname, d3.dtl_Value as roletype, d4.dtl_Value as mimetype from Records r ".
                     " left join recDetails d on r.rec_ID=d.dtl_RecID and d.dtl_DetailTypeID=".DT_ENTITY_TYPE.
                     " left join recDetails d2 on r.rec_ID=d2.dtl_RecID and d2.dtl_DetailTypeID=".DT_NAME.
                     " left join recDetails d3 on r.rec_ID=d3.dtl_RecID and d3.dtl_DetailTypeID=".DT_ROLE_TYPE.
+                    " left join recDetails d4 on r.rec_ID=d4.dtl_RecID and d4.dtl_DetailTypeID=".DT_TYPE_MIME.
                     " where r.rec_RecTypeID";
 
                     if($ft>0){
@@ -143,13 +144,16 @@
                     if (($row2['roletype'] && $row2['roletype']!=3324) ) continue; //.if role it may be occupation only
                     //|| $row2['rec_id']==301
 
-                    $subfolder = getStaticSubfolder($row2['rtype'], $row2['enttype']);
+                    $subfolder = getStaticSubfolder($row2['rtype'], $row2['enttype'], @$row2['mimetype']);
 
                     $filename_html = $path.$subfolder;
                     createDir($filename_html);
 
-                    $rname = getStaticFileName($row2['rtype'], $row2['enttype'], $row2['rname'], $row2['rec_id']);
+                    $rname = getStaticFileName($row2['rtype'], $row2['enttype'], @$row2['mimetype'], $row2['rname'], $row2['rec_id']);
                     $filename_html = $path.$rname; //.".html";
+                    $gname = getStaticFileLeafName($row2['rtype'], $row2['rname'], $row2['rec_id']);
+                    $generic_item_path = "{$path}item/$gname";
+                    createDir($path."item");
 
                     if(!$is_recreate){
                         // do not not recreate if html already exists
@@ -173,6 +177,10 @@
 
                         if($out2){
                             saveAsFile($out2, $filename_html);
+                            // create symbolic links for multimedia items
+                            if($row2['rtype']==RT_MEDIA) {
+                                createLink($generic_item_path, $filename_html);
+                            }
                         }else{
                             //report error
                             echo "".($cntp)." <div style='color:red'>$rname - ERROR!!!</div>";

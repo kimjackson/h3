@@ -434,7 +434,7 @@
             if($f_record==null || $f_record->id() != $row2['rec_id']){
                 $f_record = new Record();
                 $f_record->init( array("rec_id"=>$row2['rec_id'], "rectype"=>($rectype?$rectype:$row2['rectype']) ) );
-                $reltype = $row2['reltype'];
+                $reltype = @$row2['reltype'];
                 $record->addRelation($f_record, $reltype);
             }
 

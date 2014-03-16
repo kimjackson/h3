@@ -93,6 +93,7 @@
         534 => array("image", "Pictures"),
         536 => array("image", "Pictures"),
         537 => array("image", "Pictures"),
+        538 => array("image", "Pictures"),
         540 => array("image", "Pictures"),
         3330 => array("audio", "Sounds"),
         3331 => array("audio", "Sounds"),

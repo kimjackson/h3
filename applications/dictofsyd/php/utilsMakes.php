@@ -97,7 +97,7 @@ function getEntityTypeList($record){
 	$cnt = 0;
 	foreach ($factoids as $factoid) {
 		if($cnt>0){
-			$res = $res.",";
+			$res = $res.", ";
 		}
 		$res = $res.$record->getRoleName($factoid);
 		$cnt++;
@@ -181,7 +181,7 @@ function getImageTag(Record $record, $classname=null, $type=null){
         }
 
 		if($islink){
-			$out = getLinkTag3(RT_MEDIA, null, $out, $id);
+			$out = getLinkTag3($record->type(), null, $record->getDet(DT_TYPE_MIME), $out, $id);
 		}
 
 		return $out;
@@ -201,7 +201,7 @@ function getAudioTag(Record $record){
 
 	$id = $record->id();
 
-    return getLinkTag3(RT_MEDIA, null, '<img src="'.$urlbase.'images/img-entity-audio.jpg" alt="'.$record->getDet(DT_NAME).'"/>', $id);
+    return getLinkTag3(RT_MEDIA, null, $record->getDet(DT_TYPE_MIME), '<img src="'.$urlbase.'images/img-entity-audio.jpg" alt="'.$record->getDet(DT_NAME).'"/>', $id);
 
 	//old way return '<a href="'.$id.'" class="popup preview-'.$id.'">'.
 	//		'<img src="'.$urlbase.'images/img-entity-audio.jpg" alt="'.$record->getDet(DT_NAME).'"/></a>';
@@ -541,14 +541,14 @@ function makeFacoid(Record $record, Record $factoid, $title){
 			print '<div class="entity-information-col01-02">'.$factoid->getDet(DT_NAME).'</div>';
         }else if($factoid_type=='Type'){
 
-			print '<div class="entity-information-col01-02">'.getLinkTag3(RT_ROLE, null, $role_name, $role_rec_id).'</div>';
+			print '<div class="entity-information-col01-02">'.getLinkTag3(RT_ROLE, null, null, $role_name, $role_rec_id).'</div>';
 
 		}else{
 
 			$out = '<div class="entity-information-col01">';
 			if($factoid_type == 'Occupation' || $factoid_type == 'Position'){
 				//$factoid->toString().
-					$out = $out.getLinkTag3(RT_ROLE, null, $role_name, $role_rec_id);
+					$out = $out.getLinkTag3(RT_ROLE, null, null, $role_name, $role_rec_id);
 			}else{
 					$out = $out.$role_name;
 			}
@@ -770,12 +770,12 @@ function getLinkTag($record, $factoid_type=null){
         if($factoid_type){
             $subtype = $factoid_type;
         }
-	}
+    }
 
-    return getLinkTag3($type, $subtype, $title, $id, $url);
+    return getLinkTag3($type, $subtype, $record->getDet(DT_TYPE_MIME), $title, $id, $url);
 }
 
-function getLinkTag3($type, $subtype, $title, $id, $url=""){
+function getLinkTag3($type, $subtype, $mimetype=null, $title, $id, $url=""){
 
         global $urlbase, $is_generation, $path_preview;
 
@@ -818,7 +818,7 @@ function getLinkTag3($type, $subtype, $title, $id, $url=""){
 
         if($type!=RT_WEBLINK){
             if ($is_generation){
-                $url = $urlbase.getStaticFileName($type, $subtype, $title, $id).$url;
+                $url = $urlbase.getStaticFileName($type, $subtype, $mimetype, $title, $id).$url;
             }else {
                 $url = $id.$url;
             }
@@ -1124,6 +1124,7 @@ function makePreviewDiv($record, $record_annotation)
 	if(!$image){
 
         if($record->type()==RT_MEDIA && $record->getFeatureTypeName()=="audio"){
+        }else if($record->type()==RT_ENTRY){
         }else{
 		    $image = getImageTag($record, 'thumbnail', 'thumbnail2');
         }

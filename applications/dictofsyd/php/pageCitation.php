@@ -48,7 +48,7 @@
     }
 
             if ($is_generation){
-                $human_url = $startupurl.getStaticFileName($record->type(), null, $record->getDet(DT_NAME), $record->id());
+                $human_url = $startupurl.getStaticFileName($record->type(), null, $record->getDet(DT_TYPE_MIME), $record->getDet(DT_NAME), $record->id());
             }else {
                 $human_url = $urlbase.$record->id();
             }

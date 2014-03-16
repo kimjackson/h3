@@ -103,6 +103,13 @@
         }
     }
 
+    function createLink($from, $to){
+        unlink($from);
+        if (!symlink($to,$from)){
+            die("Failed to create symbolic link from $from to $to");
+        }
+    }
+
     /**
     * Get information about file from database
     *
@@ -333,10 +340,24 @@
     }
 
     //
-    function getStaticSubfolder($rec_type, $entity_type){
+    function getStaticSubfolder($rec_type, $entity_type, $mime_type=null){
+        global $typeValues;
         $subfolder = "";
         if($rec_type==RT_MEDIA){
-            $subfolder = "item";
+            if($mime_type){
+                $res = @$typeValues[$mime_type];
+                if(is_array($res)) {
+                    $subfolder = $res[0];
+                }else{
+                    add_error_log("No path mapping for MIME type $mime_type");
+                    error_log("No path mapping for MIME type $mime_type");
+                    return "MOOO";
+                }
+            }else{
+                add_error_log("Media record with missing MIME type");
+            }
+        }else if ($rec_type==RT_TILEDIMAGE){
+            $subfolder = "image";
         }else if ($rec_type==RT_ENTITY){
             $subfolder = getNameByCode($entity_type); //static function from Record
         }else{
@@ -354,11 +375,16 @@
     }
 
     //
-    function getStaticFileName($rec_type, $entity_type, $rec_name, $rec_id){
+    function getStaticFileName($rec_type, $entity_type=null, $mime_type=null, $rec_name, $rec_id){
 
-        $subfolder = getStaticSubfolder($rec_type, $entity_type);
+        $subfolder = getStaticSubfolder($rec_type, $entity_type, $mime_type);
+        $rname = getStaticFileLeafName($rec_type, $rec_name, $rec_id);
 
-        if($rec_type==RT_MEDIA || $rec_type==RT_MAP){
+        return $subfolder."/".$rname;
+    }
+
+    function getStaticFileLeafName($rec_type, $rec_name, $rec_id){
+        if($rec_type==RT_MEDIA || $rec_type==RT_MAP || $rec_type==RT_TILEDIMAGE){
             $rname = $rec_id;
         }else{
             $rname = $rec_name;
@@ -372,7 +398,6 @@
             //$rname = preg_replace('/[^a-z\d ]/i', '', $rname);
             //$rname = str_replace(' ','_',$rname);
         }
-
-        return $subfolder."/".$rname;
+        return $rname;
     }
 ?>

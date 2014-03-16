@@ -205,7 +205,7 @@ function makeAnnotations($record){
 
 
             if ($is_generation){
-                $annotated_url = $urlbase.getStaticFileName(RT_MEDIA, null, $mediarec->getDet(DT_NAME), $annotated_rec_id);
+                $annotated_url = $urlbase.getStaticFileName($mediarec->type(), null, $mediarec->getDet(DT_TYPE_MIME), $mediarec->getDet(DT_NAME), $annotated_rec_id);
             }else {
                 $annotated_url = $annotated_rec_id;
             }
@@ -214,19 +214,20 @@ function makeAnnotations($record){
 
             if ($is_generation){
 
+                $sub_record = getRecordFull($annotated_rec_id);
+                if(!$sub_record){
+                    add_error_log("ERROR >>>> entry ".$record->id().". annotation ".$annotation->id().". Entity not found ".$annotated_rec_id);
+                    continue;
+                }
+
                 $subtype = $annotation->getDet(DT_ANNOTATION_ENTITY, 'ref2');
                 if(!$subtype){
-                    $sub_record = getRecordFull($annotated_rec_id);
-                    if(!$sub_record){
-                        add_error_log("ERROR >>>> entry ".$record->id().". annotation ".$annotation->id().". Entity not found ".$annotated_rec_id);
-                        continue;
-                    }
                     $rectype = $sub_record->type();
                 }else{
                     $rectype = RT_ENTITY;
                 }
 
-                $annotated_url = $urlbase.getStaticFileName($rectype, $annotation->getDet(DT_ANNOTATION_ENTITY, 'ref2'), $annotation->getDet(DT_ANNOTATION_ENTITY, 'ref'), $annotated_rec_id);
+                $annotated_url = $urlbase.getStaticFileName($rectype, $annotation->getDet(DT_ANNOTATION_ENTITY, 'ref2'), $sub_record->getDet(DT_TYPE_MIME), $annotation->getDet(DT_ANNOTATION_ENTITY, 'ref'), $annotated_rec_id);
 
             }else {
                 $annotated_url = $annotated_rec_id;
