@@ -84,13 +84,10 @@
                     " left join recDetails d2 on r.rec_ID=d2.dtl_RecID and d2.dtl_DetailTypeID=".DT_NAME.
                     " left join recDetails d3 on r.rec_ID=d3.dtl_RecID and d3.dtl_DetailTypeID=".DT_ROLE_TYPE.
                     " left join recDetails d4 on r.rec_ID=d4.dtl_RecID and d4.dtl_DetailTypeID=".DT_TYPE_MIME.
-                    " where r.rec_RecTypeID";
-
-                    if($ft>0){
-                        $where = $where."=".$ft; // specific record type
-                    }else{
-                        $where = $where." in (5,13,24,25,27,28,29)"; //  $ft = 0 indicates All record types
-                    }
+                    " left join recDetails d5 on r.rec_ID=d5.dtl_RecID and d5.dtl_DetailTypeID=".DT_TILEDIMAGE_TYPE.
+                    " left join defTerms t on t.trm_ID = d5.dtl_Value".
+                    " where r.rec_RecTypeID ". ($ft>0 ? "=$ft" : " in (5,11,13,24,25,27,28,29)").
+                    " and if (rec_RecTypeID = ".RT_TILEDIMAGE.", t.trm_Label = 'image', 1)";
                 }
                 if(@$_REQUEST['r1'] && @$_REQUEST['r2'] && is_numeric($_REQUEST['r1']) && is_numeric($_REQUEST['r2']))
                 {
@@ -216,7 +213,7 @@
                             add_error_log("ERROR>>>> Can not create citation for $ranme. Record #".$rec_id);
                         }
 
-                    }else if($row2['rtype']==RT_MEDIA){
+                    }else if($row2['rtype']==RT_MEDIA || $row2['rtype']==RT_TILEDIMAGE){
 
                         ob_start();
                         require(dirname(__FILE__)."/php/pagePopup.php");
@@ -411,6 +408,7 @@ input[readonly="readonly"]{
                                 <option value="13">Entries</option>
                                 <option value="28">Maps</option>
                                 <option value="5">Multimedia</option>
+                                <option value="11">Tiled images</option>
                                 <option value="27">Roles</option>
                                 <option value="29">Subjects</option>
                                 <option value="24">Contributors</option>

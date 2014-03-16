@@ -262,7 +262,7 @@
 
             global $featureNames;
 
-            if (RT_ENTITY == $this->type() || RT_MEDIA == $this->type()){
+            if (RT_ENTITY == $this->type() || RT_MEDIA == $this->type() || RT_TILEDIMAGE == $this->type()){
                 return $this->getFeatureTypeName(); //@$typeValues[ intval($this->getDet(DT_ENTITY_TYPE))][0];
             }else{
                 return @$featureNames[$this->type()][0];
@@ -360,7 +360,7 @@
         public function getFeatureTitle(){
             global $featureNames, $featureTypeCodes, $typeValues;
 
-            if(($this->type()==RT_MEDIA || $this->type()==RT_ENTITY) && @$featureTypeCodes[$this->type()]){
+            if(($this->type()==RT_MEDIA || $this->type()==RT_ENTITY || $this->type()==RT_TILEDIMAGE) && @$featureTypeCodes[$this->type()]){
 
                 $dt_code = $this->getDet($featureTypeCodes[$this->type()]);
                 $res = @$typeValues[$dt_code];

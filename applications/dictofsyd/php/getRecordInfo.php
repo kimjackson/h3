@@ -217,7 +217,7 @@
                 }
             }
 
-            if($record->type()==RT_ENTITY || $record->type()==RT_MEDIA){
+            if($record->type()==RT_ENTITY || $record->type()==RT_MEDIA || $record->type()==RT_TILEDIMAGE){
 
                 //get annotations : names of entries
                 //old way
