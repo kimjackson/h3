@@ -80,7 +80,7 @@ DOS.Browse = (function () {
                     subfolder = "natural_feature";
                 }
                 
-				return "../" + subfolder + "/" + escape(
+				return "../" + subfolder + "/" + encodeURIComponent(
 					title.toLowerCase()
 						.replace(/ /g, "_")
 						.replace(/,/g, "")
