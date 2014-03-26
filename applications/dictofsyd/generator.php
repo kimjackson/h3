@@ -148,6 +148,7 @@
 
                     $rname = getStaticFileName($row2['rtype'], $row2['enttype'], @$row2['mimetype'], $row2['rname'], $row2['rec_id']);
                     $filename_html = $path.$rname; //.".html";
+                    $relative_filename = "../$rname";
                     $gname = getStaticFileLeafName($row2['rtype'], $row2['rname'], $row2['rec_id']);
                     $generic_item_path = "{$path}item/$gname";
                     createDir($path."item");
@@ -176,7 +177,7 @@
                             saveAsFile($out2, $filename_html);
                             // create symbolic links for multimedia items
                             if($row2['rtype']==RT_MEDIA) {
-                                createLink($generic_item_path, $filename_html);
+                                createLink($generic_item_path, $relative_filename);
                             }
                         }else{
                             //report error
