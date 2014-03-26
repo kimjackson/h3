@@ -181,12 +181,12 @@
                         }else{
                             //report error
                             echo "".($cntp)." <div style='color:red'>$rname - ERROR!!!</div>";
-                            add_error_log("ERROR>>>> Can not create page for $ranme. Record #".$rec_id);
+                            add_error_log("ERROR>>>> Can not create page for $rname. Record #".$rec_id);
                             continue;
                         }
                     } catch (Exception $e) {
                         echo "".($cntp)." <div style='color:red'>$rname - ERROR:". $e->getMessage()."</div>";
-                        add_error_log("ERROR>>>> Can not create page for $ranme. Record #".$rec_id."  Sys.message: ".$e->getMessage());
+                        add_error_log("ERROR>>>> Can not create page for $rname. Record #".$rec_id."  Sys.message: ".$e->getMessage());
                         continue;
                     }
 
@@ -198,7 +198,7 @@
                         saveAsFile($out, $path_preview."/".$rec_id);
                     }else{
                         echo "".($cntp)." <div style='color:blue'>$rname - preview generation failed</div>";
-                        add_error_log("ERROR>>>> Can not create Preview for $ranme. Record #".$rec_id);
+                        add_error_log("ERROR>>>> Can not create Preview for $rname. Record #".$rec_id);
                     }
 
                     if($row2['rtype']==RT_ENTRY){
@@ -210,7 +210,7 @@
                             saveAsFile($out, $path_citation."/".$rec_id);
                         }else{
                             echo "".($cntp)." <div style='color:blue'>$rname - citation generation failed</div>";
-                            add_error_log("ERROR>>>> Can not create citation for $ranme. Record #".$rec_id);
+                            add_error_log("ERROR>>>> Can not create citation for $rname. Record #".$rec_id);
                         }
 
                     }else if($row2['rtype']==RT_MEDIA || $row2['rtype']==RT_TILEDIMAGE){
@@ -223,14 +223,14 @@
                             saveAsFile($out, $path_popup."/".$rec_id);
                         }else{
                             echo "".($cntp)." <div style='color:blue'>$rname - popup generation failed</div>";
-                            add_error_log("ERROR>>>> Can not create media popup for $ranme. Record #".$rec_id);
+                            add_error_log("ERROR>>>> Can not create media popup for $rname. Record #".$rec_id);
                         }
 
                         //copy full media file and create thumbnail (for images)
                         if($media_is_recreate){
                             if(!publicMedia($record, $path.$media_filepath)){
                                 echo "".($cntp)." <div style='color:blue'>$rname - copy media file failed</div>";
-                                add_error_log("ERROR>>>> Can not copy media file for $ranme. Record #".$rec_id);
+                                add_error_log("ERROR>>>> Can not copy media file for $rname. Record #".$rec_id);
                             }
                         }
                     }
