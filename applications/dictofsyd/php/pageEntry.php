@@ -181,11 +181,11 @@ function makeAnnotations($record){
                     $out = null;
 
                     if($media_type=="image"){
-                        $out = getImageTag($mediarec, 'thumbnail', 'thumbnail2');
+                        $out = getImageTag($mediarec, 'thumbnail', 'thumbnail2', $ann_id);
                     }else if($media_type=="audio"){
-                        $out = getAudioTag($mediarec);
+                        $out = getAudioTag($mediarec, $ann_id);
                     }else if($media_type=="video"){
-                        $out = getVideoTag($mediarec);
+                        $out = getVideoTag($mediarec, $ann_id);
                     }
 
                     if($out){
@@ -254,6 +254,22 @@ function makeAnnotations($record){
                     targetID : \"".$annotated_rec_id."\",
                     href : \"".$annotated_url."\",
                     recordID : \"".$ann_id."\" } );\n";
+
+	if ($is_generation){
+            global $path_preview;
+	    $preview_id = $annotated_rec_id."A".$ann_id;
+	    $keep = @$_REQUEST['name'];
+	    $_REQUEST['name'] = $preview_id;
+	    ob_start();
+	    require(dirname(__FILE__)."/pagePreview.php");
+	    $out = ob_get_clean();
+	    if($out){
+		saveAsFile($out, $path_preview."/".$preview_id);
+	    }else{
+		add_error_log("ERROR >>>> Can not create PREVIEW. ".$preview_id);
+	    }
+	    $_REQUEST['name'] = $keep;
+	}
 
     }//foreach
 ?>

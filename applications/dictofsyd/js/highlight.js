@@ -234,7 +234,7 @@ function transformTextNode(elem, refs, startingRefs, endingRefs, wordOffset) {
 		if (! ref.hide) {
 			if (ref["targetID"]) {
 				a.href = ref.href;
-				a.className += " preview-" + ref.targetID; //ARTEM + "c" + ref.recordID;
+				a.className += " preview-" + ref.targetID + "A" + ref.recordID;
 			} else {
 				a.className += " preview-" + ref.recordID;
 			}
@@ -374,7 +374,7 @@ function transformTextNode(elem, refs, startingRefs, endingRefs, wordOffset) {
 				if (! ref.hide) {
 					if (ref["targetID"]) {
 						a.href = ref.href;
-						a.className += " preview-" + ref.targetID; //ARTEM + "c" + ref.recordID;
+						a.className += " preview-" + ref.targetID + "A" + ref.recordID;
 					} else {
 						a.className += " preview-" + ref.recordID;
 					}

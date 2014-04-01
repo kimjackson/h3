@@ -144,7 +144,7 @@ function getFileURL(Record $record, $type=null){
 * @param mixed $type
 * @return mixed
 */
-function getImageTag(Record $record, $classname=null, $type=null){
+function getImageTag(Record $record, $classname=null, $type=null, $context=null){
 
     global $urlbase, $is_generation;
 
@@ -181,7 +181,7 @@ function getImageTag(Record $record, $classname=null, $type=null){
         }
 
 		if($islink){
-			$out = getLinkTag3($record->type(), null, $record->getDet(DT_TYPE_MIME), $out, $id);
+			$out = getLinkTag3($record->type(), null, $record->getDet(DT_TYPE_MIME), $out, $id, null, $context);
 		}
 
 		return $out;
@@ -196,12 +196,12 @@ function getImageTag(Record $record, $classname=null, $type=null){
 *
 * @param Record $record
 */
-function getAudioTag(Record $record){
+function getAudioTag(Record $record, $context=null){
     global $urlbase;
 
 	$id = $record->id();
 
-    return getLinkTag3(RT_MEDIA, null, $record->getDet(DT_TYPE_MIME), '<img src="'.$urlbase.'images/img-entity-audio.jpg" alt="'.$record->getDet(DT_NAME).'"/>', $id);
+    return getLinkTag3(RT_MEDIA, null, $record->getDet(DT_TYPE_MIME), '<img src="'.$urlbase.'images/img-entity-audio.jpg" alt="'.$record->getDet(DT_NAME).'"/>', $id, null, $context);
 
 	//old way return '<a href="'.$id.'" class="popup preview-'.$id.'">'.
 	//		'<img src="'.$urlbase.'images/img-entity-audio.jpg" alt="'.$record->getDet(DT_NAME).'"/></a>';
@@ -212,10 +212,10 @@ function getAudioTag(Record $record){
 *
 * @param Record $record
 */
-function getVideoTag(Record $record){
+function getVideoTag(Record $record, $context=null){
 	$id = $record->id();
 
-	$out = getImageTag($record, 'thumbnail', 'thumbnail2');
+	$out = getImageTag($record, 'thumbnail', 'thumbnail2', $context);
 	if($out==""){
         return getLinkTag($record);
 		//old way return '<a href="'.$id.'" class="popup preview-'.$id.'">'.$record->getDet(DT_NAME).'</a>';
@@ -775,7 +775,7 @@ function getLinkTag($record, $factoid_type=null){
     return getLinkTag3($type, $subtype, $record->getDet(DT_TYPE_MIME), $title, $id, $url);
 }
 
-function getLinkTag3($type, $subtype, $mimetype=null, $title, $id, $url=""){
+function getLinkTag3($type, $subtype, $mimetype=null, $title, $id, $url="", $context=null){
 
         global $urlbase, $is_generation, $path_preview;
 
@@ -791,12 +791,15 @@ function getLinkTag3($type, $subtype, $mimetype=null, $title, $id, $url=""){
 
         }else{
             $classname = 'preview-'.$id;
-            if(strpos($url,"#ref=")===0){
+            if(!$context && strpos($url,"#ref=")===0){
+                $context = substr($url,5);
+            }
+            if($context){
                 //add annotation id
-                $classname = $classname."A".substr($url,5);
+                $classname = $classname."A".$context;
                 
                 if ($is_generation){
-                    $preview_id = $id."A".substr($url,5);
+                    $preview_id = $id."A".$context;
                     $keep = @$_REQUEST['name'];
                     $_REQUEST['name'] = $preview_id;
                     ob_start();
