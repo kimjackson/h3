@@ -50,22 +50,13 @@ DOS.Browse = (function () {
 
 	function _getSortingLetter (name) {
 		//var matches = name.match(/^('|the )?(.)/i);
-
-        if(name.indexOf("'")==0){
-            name = name.substring(1);
-        }
-
-        var matches = name.match(/^(the |a |an )?(.)/i);
+		var matches = name.match(/^['"]?(the |a |an )?['"]?(.)/i);
 		if (matches  &&  matches[2]) {
 			return matches[2].toUpperCase();
 		}
 	}
 
 	function _getHref (id, title) {
-
-		return RelBrowser.baseURL + id; //ARTEM
-
-		DOS.Browse.pathBase	= RelBrowser.baseURL;
 
 		if (DOS.Browse.pathBase) {
 			if (DOS.Browse.pathBase === "map") {
