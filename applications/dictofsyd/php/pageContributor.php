@@ -35,7 +35,7 @@
 	}
 	$val = $record->getDet(DT_CONTRIBUTOR_LINK);
 	if($val){
-		print '<p>Click <a target="_blank" href="'.$val.'">here</a> to visit this contributor.</p>';
+		print '<p>Click <a target="_blank" href="'. (preg_match('/^http/', $val) ? '' : 'http://') . $val .'">here</a> to visit this contributor.</p>';
 	}
 
 	makeSubjectItem( $record->getRelationRecordByType(RT_ENTRY) );
