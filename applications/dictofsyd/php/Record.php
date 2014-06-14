@@ -333,9 +333,6 @@
         public function getDescription(){
             
             $val = $this->getDet(DT_SHORTSUMMARY);           
-            if(!$val){
-                    $val = $this->getDet(DT_DESCRIPTION);           
-            }
             return $val;
         }
         
