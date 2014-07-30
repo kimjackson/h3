@@ -37,6 +37,10 @@
     require_once(dirname(__FILE__)."/php/getRecordInfo.php");
     require_once(dirname(__FILE__)."/php/utilsMakes.php");
 
+    // We don't want to use the factoid / annotation caches,
+    // they're only for bulk generation.
+    $use_pointer_cache = false;
+
     // Check for parameters
     if( (@$_REQUEST['sub']=="" and  @$_REQUEST['id']=="") ||  @$_REQUEST['sub']=="browse" || @$_REQUEST['id']=="browse"){
 
