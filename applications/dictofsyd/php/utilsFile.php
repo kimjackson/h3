@@ -393,6 +393,7 @@
             $rname = str_replace(" ","_",$rname);
             $rname = str_replace(",","",$rname);
             $rname = str_replace("'","",$rname);
+            $rname = str_replace(":","",$rname);
             $rname = str_replace("/","_",$rname);
 
             //$rname = preg_replace('/[^a-z\d ]/i', '', $rname);

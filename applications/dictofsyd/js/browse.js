@@ -76,6 +76,8 @@ DOS.Browse = (function () {
 						.replace(/ /g, "_")
 						.replace(/,/g, "")
 						.replace(/'/g, "")
+						.replace(/:/g, "")
+						.replace(/\//g, "_")
 				);
 			}
 		} else {
