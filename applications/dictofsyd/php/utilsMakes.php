@@ -160,14 +160,14 @@ function getImageTag(Record $record, $classname=null, $type=null, $context=null)
 		$islink = false;
 
 		if($type=='large'){
-			$size = 'style="{max-width:700px;max-height:640px;}"';
+			$size = 'style="max-width:698px;"';
 		}else if($type=='wide'){
-			$size = 'style="{max-width:800px;max-height:400px;}"';
+			$size = 'style="max-width:800px;max-height:400px;"';
 		}else if($type=='medium'){
 			$size = 'height="180"';
 			$islink = true;
 		}else if($type=='thumbnail2'){
-			$size = 'style="{max-width:140px;max-height:140px;}"';
+			$size = '';
 			$islink = true;
 		}
 		if($classname){
