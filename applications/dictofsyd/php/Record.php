@@ -460,13 +460,13 @@
         *
         * @param Record $factoid
         */
-        function getRoleName(Record $factoid){
+        function getRoleName(Record $factoid, $canonical=false){
 
             $res = $factoid->getDet(DT_FACTOID_ROLE, 'ref');
 
             if($res == 'Generic'){
                 $res = $factoid->getDet(DT_NAME);
-            }else if( $factoid->getDet(DT_FACTOID_TARGET)== $this->id() && $factoid->getDet(DT_FACTOID_ROLE, 'ref2') ){
+            }else if( ! $canonical && $factoid->getDet(DT_FACTOID_TARGET)== $this->id() && $factoid->getDet(DT_FACTOID_ROLE, 'ref2') ){
                 $res = $factoid->getDet(DT_FACTOID_ROLE, 'ref2');
             }
 
