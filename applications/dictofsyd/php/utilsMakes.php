@@ -535,6 +535,7 @@ function makeFacoid(Record $record, Record $factoid, $title){
 		$role_rec_id = $factoid->getDet(DT_FACTOID_ROLE);
 		$role_n = $factoid->getDet(DT_FACTOID_ROLE, 'ref');
 		$role_name	= $record->getRoleName($factoid);
+		$canonical_role_name = $record->getRoleName($factoid, true);
 		//$role_name2 = $factoid->getDet(DT_FACTOID_ROLE, 'ref2');
 
 		if($role_n =='Generic'){
@@ -547,8 +548,7 @@ function makeFacoid(Record $record, Record $factoid, $title){
 
 			$out = '<div class="entity-information-col01">';
 			if($factoid_type == 'Occupation' || $factoid_type == 'Position'){
-				//$factoid->toString().
-					$out = $out.getLinkTag3(RT_ROLE, null, null, $role_name, $role_rec_id);
+					$out = $out.getLinkTag3(RT_ROLE, null, null, $canonical_role_name, $role_rec_id, null, null, $role_name);
 			}else{
 					$out = $out.$role_name;
 			}
@@ -775,11 +775,13 @@ function getLinkTag($record, $factoid_type=null){
     return getLinkTag3($type, $subtype, $record->getDet(DT_TYPE_MIME), $title, $id, $url);
 }
 
-function getLinkTag3($type, $subtype, $mimetype=null, $title, $id, $url="", $context=null){
+function getLinkTag3($type, $subtype, $mimetype=null, $title, $id, $url="", $context=null, $linktext=null){
 
         global $urlbase, $is_generation, $path_preview;
 
-        $linktext = $title;
+        if (! $linktext) {
+            $linktext = $title;
+        }
 
         if($subtype=="noclass"){
             $classname = "";
