@@ -681,7 +681,6 @@ function makeAuthorList(Record $record){
 
 	if(count($authors)>0 || count($supportes)>0){
 
-		uasort($authors, 'sort_byname');
 		asort($supportes);
 
 		$cnt = 0;
