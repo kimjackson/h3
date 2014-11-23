@@ -280,6 +280,22 @@ if ( $type == RT_ENTRY ){ //find entry types
 	             and rd_type = 568
 	        order by rd_val, if (rec_title like 'the %', substr(rec_title, 5), replace(rec_title, '\'', ''))";
 */
+
+} else if ($type == RT_MEDIA) {
+
+	$query = "select distinct if (terms.trm_Label like 'audio/%', 'Audio',
+                              if (terms.trm_Label like 'image/%', 'Image',
+                              if (terms.trm_Label like 'video/%', 'Video', 'other'))) as media_type,
+                              if (terms.trm_Label like 'audio/%', 'Audio',
+                              if (terms.trm_Label like 'image/%', 'Image',
+                              if (terms.trm_Label like 'video/%', 'Video', 'other'))) as label,
+                              r.rec_id
+                         from Records r
+                    left join recDetails type on r.rec_ID = type.dtl_RecID and type.dtl_DetailTypeID = ".DT_TYPE_MIME."
+                    left join defTerms terms on type.dtl_Value = terms.trm_ID
+                        where rec_RecTypeID = ".RT_MEDIA."
+                     order by media_type, ".$order_stm;
+
 } else {  //@todo for entities only
 
     if($use_pointer_cache){
