@@ -283,18 +283,24 @@ if ( $type == RT_ENTRY ){ //find entry types
 
 } else if ($type == RT_MEDIA) {
 
-	$query = "select distinct if (terms.trm_Label like 'audio/%', 'Audio',
-                              if (terms.trm_Label like 'image/%', 'Image',
-                              if (terms.trm_Label like 'video/%', 'Video', 'other'))) as media_type,
-                              if (terms.trm_Label like 'audio/%', 'Audio',
-                              if (terms.trm_Label like 'image/%', 'Image',
-                              if (terms.trm_Label like 'video/%', 'Video', 'other'))) as label,
+    $query = "select distinct if (mime_term.trm_Label like 'audio/%', if (audio_term.trm_Label like 'Oral History', 'Oral History', 'Audio'),
+                              if (mime_term.trm_Label like 'image/%', 'Images',
+                              if (mime_term.trm_Label like 'video/%', 'Videos', 'other'))) as media_type,
+                              if (mime_term.trm_Label like 'audio/%', if (audio_term.trm_Label like 'Oral History', 'Oral History', 'Audio'),
+                              if (mime_term.trm_Label like 'image/%', 'Images',
+                              if (mime_term.trm_Label like 'video/%', 'Videos', 'other'))) as label,
                               r.rec_id
                          from Records r
                     left join recDetails type on r.rec_ID = type.dtl_RecID and type.dtl_DetailTypeID = ".DT_TYPE_MIME."
-                    left join defTerms terms on type.dtl_Value = terms.trm_ID
+                    left join defTerms mime_term on type.dtl_Value = mime_term.trm_ID
+                    left join recDetails audioType on r.rec_ID = audioType.dtl_RecID and audioType.dtl_DetailTypeID = ".DT_TYPE_AUDIO."
+                    left join defTerms audio_term on audioType.dtl_Value = audio_term.trm_ID
                         where rec_RecTypeID = ".RT_MEDIA."
-                     order by media_type, ".$order_stm;
+                     order by media_type != 'Oral History',
+                              media_type != 'Audio',
+                              media_type != 'Images',
+                              media_type != 'Videos',
+                              ".$order_stm;
 
 } else {  //@todo for entities only
 
