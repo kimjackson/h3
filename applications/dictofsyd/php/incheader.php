@@ -98,9 +98,15 @@ if(isset($record)){
 						<script type="text/javascript" src="<?=$urlbase ?>js/popups.js"></script>
 
 <?php
-if($record->type()==RT_ENTITY || $record->type()==RT_MAP){
+if($record->type()==RT_MAP){
 ?>
-						<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+                        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>
+						<script type="text/javascript" src="<?=$urlbase ?>js/map.js"></script>
+<?php
+}else if($record->type()==RT_ENTITY){
+?>
+                        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3"></script>
+
 						<script type="text/javascript">
 							Timeline_urlPrefix = RelBrowser.baseURL+"js/timemap.js/2.0.1/lib/";
 						</script>

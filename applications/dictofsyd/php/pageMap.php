@@ -31,6 +31,7 @@ function makeFullTimeMap(Record $record){
 
 	$cnt_geo = 0;
 	$cnt_time = 0;
+	$cnt_layers = 0;
 	$datasets = "var datasets = [];";
 
 	$rec_ids = $record->getDetails(DT_MAP_KML_REF);
@@ -133,12 +134,13 @@ function makeFullTimeMap(Record $record){
 		$layers .= 'layers.push({'.
 							'title: "'.$layer->getDet(DT_NAME2).'",'.
 							'type: "'.getTypeValue($layer->getDet(DT_TILEDIMAGE_SCHEME)).'",'.
-							'url: "'.$layer->getDet(DT_TILEDIMAGE_URL).'",'.
+							'url: "http://dictionaryofsydney.org/tiles/'.$layer->id().'/",'.
 							'mime_type: "'.getMimeTypeValue($layer->getDet(DT_TYPE_MIME)).'",'.
 							'min_zoom: "'.$layer->getDet(DT_TILEDIMAGE_ZOOM_MIN).'",'.
 							'max_zoom: "'.$layer->getDet(DT_TILEDIMAGE_ZOOM_MAX).'",'.
 							'copyright: "'.$layer->getDet(DT_COPYRIGHT_STATEMENT).'"});';
 		$cnt_geo++;
+		$cnt_layers++;
 	}
 
 
@@ -149,6 +151,9 @@ function makeFullTimeMap(Record $record){
 	}else{
 		$description = '';
 	}
+    if ($cnt_layers > 0) {
+        $description .= '<p><a href="#" onclick="dos.mapping.toggleOpacity(); return false;">Toggle opacity</a></p>';
+    }
 ?>
 <div>
 
@@ -172,7 +177,11 @@ function makeFullTimeMap(Record $record){
 					count_mapobjects: <?=$cnt_geo ?>
 				};
 
-				setTimeout(function(){ initMapping("map", mapdata, false); }, 500);
+				google.maps.event.addDomListener(window, 'load', dos.mapping.init(
+                    document.getElementById("map"),
+                    mapdata
+                ));
+
 
 				</script>
 </div>
