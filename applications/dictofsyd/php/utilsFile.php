@@ -388,7 +388,7 @@
             $rname = $rec_id;
         }else{
             $rname = $rec_name;
-            $rname = strtolower(trim($rname));
+            $rname = mb_strtolower(trim($rname), 'UTF-8');
 
             $rname = str_replace(" ","_",$rname);
             $rname = str_replace(",","",$rname);
