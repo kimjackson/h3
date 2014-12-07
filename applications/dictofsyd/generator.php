@@ -138,8 +138,8 @@
 
                 while (($row2 = mysql_fetch_assoc($res2))) {
 
-                    if (($row2['roletype'] && $row2['roletype']!=3324) ) continue; //.if role it may be occupation only
-                    //|| $row2['rec_id']==301
+                    if (($row2['roletype'] && $row2['roletype']!=3324 && $row2['roletype']!=3327)) continue; // Occupation or Type
+                    //|| $row2['rec_id']==302
 
                     $subfolder = getStaticSubfolder($row2['rtype'], $row2['enttype'], @$row2['mimetype']);
 
