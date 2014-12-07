@@ -98,6 +98,7 @@
     define('DT_TYPE_MIME', 29);
     define('DT_MEDIA_REF',61);
     define('DT_TYPE_LICENSE', 94);
+    define('DT_TYPE_AUDIO', 100);
 
     define('DT_TILEDIMAGE_TYPE',30);
     define('DT_TILEDIMAGE_SCHEME',31);
