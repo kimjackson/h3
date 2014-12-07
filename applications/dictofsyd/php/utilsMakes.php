@@ -605,13 +605,17 @@ function makeEntriesInfo(Record $record){
 	$entries = $record->getRelationRecordByType(RT_ENTRY);
 	$cnt = 0;
 
+    if(count($entries)>0){
+?>
+			<div class="list-left-col list-entry" title="Entries"></div>
+<?php
+    }
 	foreach ($entries as $ent_id => $entry) {
 
 		$content_class = ($cnt+1 == count($entries))?"list-right-col-content":"list-right-col-content margin";
 
         $morelink = getLinkTag($entry, "more &#187;");
 ?>
-			<div class="list-left-col list-entry" title="Entries"></div>
 			<div class="list-right-col">
 				<div class="entity-entry">
 					<div class="list-right-col-heading">
