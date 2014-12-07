@@ -241,7 +241,7 @@
 
             $scale = $rx;
             
-            //$scale = $rx ? $ry ? max($rx, $ry) : $rx : $ry;
+            //$scale = $rx ? $ry ? min($rx, $ry) : $rx : $ry;
 
             if ($no_enlarge  &&  $scale > 1) {
                 $scale = 1;
