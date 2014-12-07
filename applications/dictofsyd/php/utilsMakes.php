@@ -819,7 +819,7 @@ function getLinkTag3($type, $subtype, $mimetype=null, $title, $id, $url="", $con
                 }
             }
             
-            if($type==RT_MEDIA){
+            if($type==RT_MEDIA || $type==RT_TILEDIMAGE){
                  $classname = 'popup '.$classname;
             }
         }
