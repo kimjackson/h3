@@ -824,14 +824,16 @@ function getLinkTag3($type, $subtype, $mimetype=null, $title, $id, $url="", $con
             }
         }
 
-        if($type!=RT_WEBLINK){
+        if ($type==RT_WEBLINK) {
+            return '<a href="'.$url.'" class="'.$classname.'" target="_blank">'.$linktext.'</a>';
+        } else {
             if ($is_generation){
                 $url = $urlbase.getStaticFileName($type, $subtype, $mimetype, $title, $id).$url;
-            }else {
+            } else {
                 $url = $id.$url;
             }
+            return '<a href="'.$url.'" class="'.$classname.'">'.$linktext.'</a>';
         }
-        return '<a href="'.$url.'" class="'.$classname.'">'.$linktext.'</a>';
 }
 
 /**
