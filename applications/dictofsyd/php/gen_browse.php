@@ -248,7 +248,7 @@ if ( $type == RT_ENTRY ){ //find entry types
                                 if (terms.trm_Label = 'Person', 'People', concat(terms.trm_Label, 's'))
                          )
                      ),
-                        entry.rec_id
+                        entry.rec_ID
 	            from Records entry
 
                      left join recRelationshipsCache rc on rc.rrc_SourceRecID = entry.rec_ID
@@ -266,20 +266,19 @@ if ( $type == RT_ENTRY ){ //find entry types
 //and rec_NonOwnerVisibility = 'public'
 
 } else if ($type == RT_CONTRIBUTOR) {
-/* NOT USED
-	$query = "select rd_val, ".
-					"if (rd_val = 'author', 'Authors', ".
-					"if (rd_val = 'institution', 'Institutions and Collections', ".
-					"if (rd_val = 'public', 'Public', ".
-					"if (rd_val = 'supporter', 'Supporters', 'Other'))),
-	                 rec_id
-	            from records,
-	                 rec_details
-	           where rec_type = 153
-	             and rd_rec_id = rec_id
-	             and rd_type = 568
-	        order by rd_val, if (rec_title like 'the %', substr(rec_title, 5), replace(rec_title, '\'', ''))";
-*/
+    $query = "select distinct dtl_Value,
+                              if (contributor_term.trm_Label = 'author', 'Authors',
+                              if (contributor_term.trm_Label = 'institution', 'Institutions and Collections',
+                              if (contributor_term.trm_Label = 'public', 'Public',
+                              if (contributor_term.trm_Label = 'supporter', 'Supporters', 'Other')))),
+	                 rec_ID
+	            from Records,
+	                 recDetails
+           left join defTerms contributor_term on dtl_Value = trm_ID
+	           where rec_RecTypeID = ".RT_CONTRIBUTOR."
+	             and dtl_RecID = rec_ID
+	             and dtl_DetailTypeID = ".DT_CONTRIBUTOR_TYPE."
+	        order by dtl_Value, if (rec_Title like 'the %', substr(rec_Title, 5), replace(rec_Title, '\'', ''))";
 
 } else if ($type == RT_MEDIA) {
 
@@ -289,7 +288,7 @@ if ( $type == RT_ENTRY ){ //find entry types
                               if (mime_term.trm_Label like 'audio/%', if (audio_term.trm_Label like 'Oral History', 'Oral History', 'Audio'),
                               if (mime_term.trm_Label like 'image/%', 'Images',
                               if (mime_term.trm_Label like 'video/%', 'Videos', 'other'))) as label,
-                              r.rec_id
+                              r.rec_ID
                          from Records r
                     left join recDetails type on r.rec_ID = type.dtl_RecID and type.dtl_DetailTypeID = ".DT_TYPE_MIME."
                     left join defTerms mime_term on type.dtl_Value = mime_term.trm_ID
@@ -387,7 +386,7 @@ if ( $type == RT_ENTRY ) {
 	$orderedLicenceTypes = array();
 
     $query = "select distinct if (licence.dtl_Value is null, 'other', terms.trm_Label) as lictype,
-                        entry.rec_id
+                        entry.rec_ID
                 from Records entry
                      left join recDetails licence on entry.rec_ID = licence.dtl_RecID and licence.dtl_DetailTypeID = ".DT_TYPE_LICENSE."
                      left join defTerms terms on licence.dtl_Value = terms.trm_ID
