@@ -65,7 +65,7 @@
 
                 // narrow terms
 
-                $ids = getRecordsForIn('SELECT group_concat(rrc_RecID) FROM recRelationshipsCache where rrc_SourceRecID='.$rec_id.' or rrc_TargetRecID='.$rec_id);
+                $ids = getRecordsForIn('SELECT rrc_RecID FROM recRelationshipsCache where rrc_SourceRecID='.$rec_id.' or rrc_TargetRecID='.$rec_id);
                 if($ids){
                     $query = 'select
 				reltarget.dtl_Value as rec_id,
@@ -120,7 +120,7 @@
                     $query = 'SELECT r1.rfc_RecID as recid FROM recFacctoidsCache r1 where r1.rfc_RoleRecID='.$rec_id;
                 }else{
                     //slower
-                    $query = 'select group_concat(distinct rd.dtl_RecID) from recDetails rd where '.
+                    $query = 'select distinct rd.dtl_RecID from recDetails rd where '.
                     ' rd.dtl_DetailTypeID='.DT_FACTOID_ROLE.' and rd.dtl_Value='.$rec_id;
                 }
 
@@ -196,9 +196,9 @@
                 //get annotations
 
                 if($use_pointer_cache){
-                    $query = 'SELECT group_concat(r1.rac_RecID) FROM recAnnotationCache r1 where r1.rac_EntryRecID='.$rec_id;
+                    $query = 'SELECT r1.rac_RecID FROM recAnnotationCache r1 where r1.rac_EntryRecID='.$rec_id;
                 }else{
-                    $query = 'select group_concat(distinct rd.dtl_RecID) from recDetails rd where '.
+                    $query = 'select distinct rd.dtl_RecID from recDetails rd where '.
                     ' rd.dtl_DetailTypeID='.DT_ANNOTATION_ENTRY.' and rd.dtl_Value='.$rec_id;
                 }
 
@@ -229,9 +229,9 @@
                 */
 
                 if($use_pointer_cache){
-                    $query = 'SELECT group_concat(r1.rac_RecID) FROM recAnnotationCache r1 where r1.rac_TargetRecID='.$rec_id;
+                    $query = 'SELECT r1.rac_RecID FROM recAnnotationCache r1 where r1.rac_TargetRecID='.$rec_id;
                 }else{
-                    $query = 'select group_concat(distinct rd.dtl_RecID) from recDetails rd where '.
+                    $query = 'select distinct rd.dtl_RecID from recDetails rd where '.
                     ' rd.dtl_DetailTypeID='.DT_ANNOTATION_ENTITY.' and rd.dtl_Value='.$rec_id;
                 }
 
@@ -296,9 +296,9 @@
 
                 //find TimePlace factoids
                 if($use_pointer_cache){
-                    $query = 'SELECT group_concat(r1.rfc_RecID) as recid FROM recFacctoidsCache r1 where r1.rfc_SourceRecID in ('.implode(',', $entity_ids).')';
+                    $query = 'SELECT r1.rfc_RecID as recid FROM recFacctoidsCache r1 where r1.rfc_SourceRecID in ('.implode(',', $entity_ids).')';
                 }else{
-                    $query = 'select group_concat(distinct rd.dtl_RecID) from recDetails rd where '.
+                    $query = 'select distinct rd.dtl_RecID from recDetails rd where '.
                     ' rd.dtl_DetailTypeID='.DT_FACTOID_SOURCE.' and rd.dtl_Value in ('.implode(',', $entity_ids).')';
                 }
 
