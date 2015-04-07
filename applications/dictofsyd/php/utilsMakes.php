@@ -1155,13 +1155,13 @@ function makePreviewDiv($record, $record_annotation)
 			<div class="balloon-middle">
 				<div class="balloon-heading balloon-<?=$type ?>">
 					<h2>
-						<?=htmlentities($record->getDet(DT_NAME)) ?>
+						<?=htmlentities($record->getDet(DT_NAME), ENT_COMPAT | ENT_HTML401, "UTF-8") ?>
 					</h2>
 				</div>
 				<div class="balloon-content">
 					<?=$image ?>
 					<p>
-						<?=htmlentities($description) ?>
+						<?=htmlentities($description, ENT_COMPAT | ENT_HTML401, "UTF-8") ?>
 					</p>
 					<div class="clearfix">
 				</div>
