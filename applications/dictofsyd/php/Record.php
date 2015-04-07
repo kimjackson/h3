@@ -479,4 +479,13 @@
         }
         */
     }
+
+    function getEntityTypeName(Record $entity) {
+        $factoids = $entity->getRelationRecordByType(RT_FACTOID, 'Type');
+        foreach ($factoids as $id => $factoid) {
+            // assume there is only one 'Type' factoid per entity
+            return $factoid->getDet(DT_FACTOID_ROLE, 'ref');
+        }
+    }
+
 ?>

@@ -336,27 +336,25 @@ function makeTimeMap(Record $record){
 			$geo = $factoid->getDet(DT_GEO,'geo');
 			$date_start = $factoid->getDet(DT_DATE_START);
 
-			if($geo || $date_start){
-
-				if($cnt>0){
-					$items = $items.',';
-				}
-
+			if(($geo || $date_start) && shouldDisplayFactoid($record, $factoid)){
 
 				$title = $record->getRoleName($factoid);
 				if($title){
+					$entity_source = $factoid->getDet(DT_FACTOID_SOURCE);
+					$entity_target = $factoid->getDet(DT_FACTOID_TARGET);
 
-				$entity_source = $factoid->getDet(DT_FACTOID_SOURCE);
-				$entity_target = $factoid->getDet(DT_FACTOID_TARGET);
-
-				if($factoid->getDet(DT_FACTOID_SOURCE,'ref')){
-					$title = $title." - ".$factoid->getDet(DT_FACTOID_SOURCE,'ref');
-				}
-				else if($factoid->getDet(DT_FACTOID_TARGET,'ref')){
-					$title = $title." - ".$factoid->getDet(DT_FACTOID_TARGET,'ref');
-				}
+					if($factoid->getDet(DT_FACTOID_SOURCE,'ref')){
+						$title = $title." - ".$factoid->getDet(DT_FACTOID_SOURCE,'ref');
+					}
+					else if($factoid->getDet(DT_FACTOID_TARGET,'ref')){
+						$title = $title." - ".$factoid->getDet(DT_FACTOID_TARGET,'ref');
+					}
 				}else{
 					$title = $record->getDet(DT_NAME);
+				}
+
+				if($cnt>0){
+					$items = $items.',';
 				}
 
 				$items = $items."getTimeMapItem(".$rec_id.",'".
@@ -418,6 +416,53 @@ function makeTimeMap(Record $record){
 	}
 }
 
+function shouldDisplayFactoid(Record $entity, Record $factoid){
+	$filters = array(
+		array('artefact', 'Ship', 'Milestone', array('Arrived Sydney')),
+		array('artefact', 'Ship', 'Position', array('Convict', 'Marine')),
+	);
+
+	if ($factoid->getDet(DT_FACTOID_SOURCE) == $entity->id()) {
+		// short circuit: always display an entity's own factoids
+		return true;
+	}
+
+print "<!--\n";
+var_dump($factoid);
+print "-->\n";
+
+	foreach($filters as $filter) {
+		$filter_entity_type    = $filter[0];
+		$filter_entity_subtype = $filter[1];
+		$filter_factoid_type   = $filter[2];
+		$filter_factoid_roles  = $filter[3];
+		if ($entity->type() == RT_ENTITY &&
+			$entity->getDet(DT_ENTITY_TYPE) == getCodeByName($filter_entity_type) &&
+			getEntityTypeName($entity) == $filter_entity_subtype)
+		{
+			if (getTypeValue($factoid->getDet(DT_FACTOID_TYPE)) == $filter_factoid_type) {
+				$factoid_role = $factoid->getDet(DT_FACTOID_ROLE, 'ref');
+				foreach ($filter_factoid_roles as $role) {
+					if ($factoid_role == $role) {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+function filterFactoidList ($record, $factoids) {
+	$filtered_factoids = array();
+	foreach ($factoids as $factoid) {
+		if (shouldDisplayFactoid($record, $factoid)) {
+			array_push($filtered_factoids, $factoid);
+		}
+	}
+	return $filtered_factoids;
+}
+
 /**
 * put your comment there...
 *
@@ -428,7 +473,7 @@ function makeFactoids(Record $record){
 	$factoids = $record->getRelationRecordByType(RT_FACTOID, 'Type');
 
 	if($factoids && count($factoids)>1){
-			makeFactoidGroup($record, $factoids, 'Types');
+		makeFactoidGroup($record, $factoids, 'Types');
 	}
 
 	$factoids = $record->getRelationRecordByType(RT_FACTOID, 'Name');
@@ -507,9 +552,10 @@ function sort_byrefname(Record $a,  Record $b){
 
 
 function makeFactoidGroup(Record $record, $factoids, $title){
-	if($factoids && count($factoids)>0){
+	$filtered_factoids = filterFactoidList($record, $factoids);
+	if($filtered_factoids && count($filtered_factoids)>0){
 
-		uasort($factoids, 'sort_factoids');
+		uasort($filtered_factoids, 'sort_factoids');
 
 ?>
 			<div class="entity-information">
@@ -518,7 +564,7 @@ function makeFactoidGroup(Record $record, $factoids, $title){
 				</div>
 
 <?php
-		foreach ($factoids as $factoid) {
+		foreach ($filtered_factoids as $factoid) {
 				//echo $factoid->id()."  ".$factoid->getDet(DT_NAME)."<br>";
 				makeFacoid($record, $factoid, $title);
 		}
