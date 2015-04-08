@@ -418,6 +418,10 @@ function makeTimeMap(Record $record){
 
 function shouldDisplayFactoid(Record $entity, Record $factoid){
 	$filters = array(
+		// These filters are in the form (a, b, c, (d1, d2 ...)).
+		// They mean: when displaying an entity of type 'a' and subtype 'b',
+		// filter out any factoids of type 'c' with roles present in the list 'd1', 'd2', etc.
+		// Note that any factoids with the entity itself as the source will always be displayed.
 		array('artefact', 'Ship', 'Milestone', array('Arrived Sydney')),
 		array('artefact', 'Ship', 'Position', array('Convict', 'Marine')),
 	);
@@ -426,10 +430,6 @@ function shouldDisplayFactoid(Record $entity, Record $factoid){
 		// short circuit: always display an entity's own factoids
 		return true;
 	}
-
-print "<!--\n";
-var_dump($factoid);
-print "-->\n";
 
 	foreach($filters as $filter) {
 		$filter_entity_type    = $filter[0];
