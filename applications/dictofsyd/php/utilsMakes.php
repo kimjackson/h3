@@ -422,8 +422,7 @@ function shouldDisplayFactoid(Record $entity, Record $factoid){
 		// They mean: when displaying an entity of type 'a' and subtype 'b',
 		// filter out any factoids of type 'c' with roles present in the list 'd1', 'd2', etc.
 		// Note that any factoids with the entity itself as the source will always be displayed.
-		array('artefact', 'Ship', 'Milestone', array('Arrived Sydney')),
-		array('artefact', 'Ship', 'Position', array('Convict', 'Marine')),
+		array('artefact', 'Ship', 'Milestone', array('Arrived Sydney', 'Departed Sydney')),
 	);
 
 	if ($factoid->getDet(DT_FACTOID_SOURCE) == $entity->id()) {
