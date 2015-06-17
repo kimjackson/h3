@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- configuration for swf/dosMenu.swf -->
 <config>
 	<icon>
 		<id>Artefacts</id>
-		<pageUrl><![CDATA[browse/artefact]]></pageUrl>
+		<pageUrl><![CDATA[browse/artefacts]]></pageUrl>
 	</icon>
 
 	<icon>
 		<id>Buildings</id>
-		<pageUrl><![CDATA[browse/building]]></pageUrl>
+		<pageUrl><![CDATA[browse/buildings]]></pageUrl>
 	</icon>
 
 	<icon>
 		<id>Entries</id>
-		<pageUrl><![CDATA[browse/entry]></pageUrl>
+		<pageUrl><![CDATA[browse/entries]]></pageUrl>
 	</icon>
 
 	<icon>
 		<id>Events</id>
-		<pageUrl><![CDATA[browse/event]]></pageUrl>
+		<pageUrl><![CDATA[browse/events]]></pageUrl>
 	</icon>
 
 	<icon>
 		<id>Maps</id>
-		<pageUrl><![CDATA[browse/map]]></pageUrl>
+		<pageUrl><![CDATA[browse/maps]]></pageUrl>
 	</icon>
 
 	<icon>
@@ -33,31 +32,31 @@
 
 	<icon>
 		<id>Organisations</id>
-		<pageUrl><![CDATA[browse/organisation]]></pageUrl>
+		<pageUrl><![CDATA[browse/organisations]]></pageUrl>
 	</icon>
 
 	<icon>
 		<id>People</id>
-		<pageUrl><![CDATA[browse/person]]></pageUrl>
+		<pageUrl><![CDATA[browse/people]]></pageUrl>
 	</icon>
 
 	<icon>
 		<id>Places</id>
-		<pageUrl><![CDATA[browse/place]]></pageUrl>
+		<pageUrl><![CDATA[browse/places]]></pageUrl>
 	</icon>
 
 	<icon>
 		<id>Roles</id>
-		<pageUrl><![CDATA[browse/role]]></pageUrl>
+		<pageUrl><![CDATA[browse/roles]]></pageUrl>
 	</icon>
 
 	<icon>
 		<id>Structures</id>
-		<pageUrl><![CDATA[browse/structure]]></pageUrl>
+		<pageUrl><![CDATA[browse/structures]]></pageUrl>
 	</icon>
 
 	<icon>
 		<id>Subjects</id>
-		<pageUrl><![CDATA[browse/term]]></pageUrl>
+		<pageUrl><![CDATA[browse/subjects]]></pageUrl>
 	</icon>
 </config>
