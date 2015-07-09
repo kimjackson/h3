@@ -32,7 +32,7 @@
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title><?=$g_title?></title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <?php
 if(isset($record)){
     print '<meta name="id" content="'.$record->id().'"/>';
