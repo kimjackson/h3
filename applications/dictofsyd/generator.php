@@ -98,7 +98,7 @@
                         $where = $where." and  r.rec_ID=".$_REQUEST['r1'];
                     }
                 }
-                $where = $where." and  r.rec_NonOwnerVisibility='public'";
+                //$where = $where." and  r.rec_NonOwnerVisibility='public'";
 
 
                 //NOT USED $type_cache = (@$_REQUEST['fhml']=='1')?0:1;

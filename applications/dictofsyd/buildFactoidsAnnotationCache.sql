@@ -21,7 +21,8 @@
         on r.rec_ID=d2.dtl_RecID and d2.dtl_DetailTypeID = 86
         left join recDetails d3
         on r.rec_ID=d3.dtl_RecID and d3.dtl_DetailTypeID = 88
-        where r.rec_RecTypeID = 26 and r.rec_NonOwnerVisibility='public';
+        where r.rec_RecTypeID = 26;
+-- and r.rec_NonOwnerVisibility='public';
 
         DROP TABLE IF EXISTS `recAnnotationCache`;
         CREATE TABLE `recAnnotationCache` (
