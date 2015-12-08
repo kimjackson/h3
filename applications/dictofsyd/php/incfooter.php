@@ -71,14 +71,6 @@ if( (!$is_generation) && isset($starttime)){
 	printf('<div style="background-color: #fff;">'.$query_times.' Page generated in %.3f seconds.</div>', $totaltime);
 }
 ?>
-<!--
-<script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script><script type="text/javascript">
-				try {
-					var pageTracker = _gat._getTracker("UA-11403264-1");
-					pageTracker._trackPageview();
-				} catch(err) {}
-</script>                
--->                
 			<script src="http://s7.addthis.com/js/250/addthis_widget.js#pub=dictionaryofsydney" type="text/javascript"></script><script type="text/javascript">
 				var addthis_config = {
 					services_exclude: 'myaol'
