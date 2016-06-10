@@ -232,6 +232,20 @@ while ($row = mysql_fetch_row($res)) {
 	array_push($orderedEntities, $row[0]);
 }
 
+$warningCountResult = mysql_query("SELECT @@warning_count");
+if ($warningCountResult) {
+    $warningCount = mysql_fetch_row($warningCountResult);
+    if ($warningCount[0] > 0) {
+        //Have warnings
+        $warningDetailResult = mysql_query("SHOW WARNINGS");
+        if ($warningDetailResult) {
+            while ($warning = mysql_fetch_assoc(warningDetailResult)) {
+                error_log("WARNING: " . print_r($warning));
+            }
+        }
+    }
+}
+
 $subtypes = array();
 $orderedSubtypes = array();
 

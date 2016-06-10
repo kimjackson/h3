@@ -56,7 +56,7 @@ $dbHost = ""; // leave blank for localhost
 // MySQL passwords may not contain special characters - if generating random password generate as alphanumeric
 // @todo: allow MySQL password other than root - currently (Dec 2013) gives error if not root
 $dbAdminUsername = "root"; // required, MUST be 'root'
-$dbAdminPassword = "?????? ENTER PASSWORD HERE ???????"; //required
+$dbAdminPassword = "zTnNJ1GY";
 
 // MySQL user with readonly access on this database server
 // For example, if there is a user account "readonly" with a password "readonlypwd", then you would use:
@@ -65,8 +65,8 @@ $dbAdminPassword = "?????? ENTER PASSWORD HERE ???????"; //required
 // Password cannot be null
 // IMPORTANT NOTE: 
 // MySQL passwords may not contain special characters - if generating random password generate as alphanumeric
-$dbReadonlyUsername = "root"; // required , could use a username with universal read (select) access
-$dbReadonlyPassword = "?????? ENTER PASSWORD HERE ???????"; //required
+$dbReadonlyUsername = "roH3"; // required
+$dbReadonlyPassword = "ro4all"; //required
 
 // dbPrefix will be prepended to all database names so that you can easily distinguish Heurist databases on your database server
 // from other MySQL databases. Some Admin tools such as PHPMyAdmin will group databases with common prefixes ending in underscore

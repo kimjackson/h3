@@ -45,7 +45,6 @@
         }
 		$record = getRecordFull($rec_id);
 
-
         if(is_numeric($rec_id_annotation)){
             $record_annotation = getRecordFull($rec_id_annotation);
         }
@@ -53,8 +52,9 @@
 
 	if(!$record){
 		//echo "not found"; //TODO
+        error_log("ERROR >>>> Can not create PREVIEW. Record not found: ".$rec_id);
         add_error_log("ERROR >>>> Can not create PREVIEW. Record not found: ".$rec_id);
-		exit();
+		return;
 	}
 
 //error_log(">>>>>".$rec_id);

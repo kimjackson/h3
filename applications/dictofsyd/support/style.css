@@ -570,7 +570,7 @@ a.selected {
 #resource img.resource-image {
 	border: 1px solid #320a0a;
 	margin: 0px 0px 17px 0px;
-    width: 100%;
+	max-width: 100%;
 }
 #resource #media {
 	margin: 0px 0px 17px 0px

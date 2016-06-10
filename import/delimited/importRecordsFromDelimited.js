@@ -1630,7 +1630,7 @@ FlexImport.Loader = (function () {
 				if (r.length < 100) {
 					// we've loaded all the records: invoke the original loader's onload
 					$("#results").html('<b>Loaded ' + loadedrecords.length + ' records </b>');
-					loader.onload(baseSearch, records);
+					loader.onload(baseSearch, loadedrecords);
 				}
 				else { // more records to retrieve
 					$("#results").html('<b>Loaded ' + loadedrecords.length + ' records so far ...</b>');

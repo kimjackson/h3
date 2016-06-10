@@ -1,4 +1,3 @@
-
 RewriteEngine On
 RewriteRule ^deploy/(.+)$ deploy/$1 [L,NC]
 RewriteRule ^php/(.+)$ php/$1 [L,NC]

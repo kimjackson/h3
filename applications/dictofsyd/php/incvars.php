@@ -30,26 +30,27 @@
     
     /*  FILE PATHS, PASSWORDS ETC. WHICH MAY REQUIRE CHANGING */
     
-    define('DOMAIN','http://heuristscholar.org/');
+    define('DOMAIN','http://54.206.45.164/');
 
     $g_title = "Dictionary of Sydney";
-    $urlbase_absolute = DOMAIN."HEURIST/h3-ao/applications/dictofsyd/";
-    $urlbase = DOMAIN."HEURIST/h3-ao/applications/dictofsyd/";
-    $deploypath = "var/www/html/HEURIST/HEURIST_FILESTORE/dosh3-deploy/";
+    $urlbase_absolute = DOMAIN."h3-new/applications/dictofsyd/";
+    $urlbase = DOMAIN."h3-new/applications/dictofsyd/";
+    $deploypath = "/var/www/generated/";
     
-    $deployurl = DOMAIN."HEURIST/HEURIST_FILESTORE/dosh3-deploy/"; //it overwrites $urlbase for generated pages
+    $deployurl = DOMAIN."generated/"; //it overwrites $urlbase for generated pages
     $startupurl = "http://dictionaryofsydney.org/"; //for logo icon
     
     // Login information for MySQL
-    define('HEURIST_DBNAME', 'DoS3');
-    define('READONLY_DBUSERNAME', 'root');
-    include dirname(__FILE__).'/DoSPassword.inc'; // avoid including in repository
-    define('READONLY_DBUSERPSWD', $DoSPassword);
+    define('HEURIST_DBNAME', 'dos');
+    define('READWRITE_DBUSERNAME', 'rwH3');
+    define('READWRITE_DBUSERPSWD', 'rw4all');
+    define('READONLY_DBUSERNAME', 'roH3');
+    define('READONLY_DBUSERPSWD', 'ro4all');
    
     // Port 3306 is not open, everything is happening locally
     define('HEURIST_DBSERVER_NAME', 'heur-db-pro-1.ucc.usyd.edu.au:3306');  //NOT USED!!!
     
-    define('HEURIST_THUMB_DIR', '/var/www/html/HEURIST/HEURIST_FILESTORE/' . HEURIST_DBNAME . '/filethumbs/');
+    define('HEURIST_THUMB_DIR', '/var/www/HEURIST_FILESTORE/' . HEURIST_DBNAME . '/filethumbs/');
     define('HEURIST_THUMB_BASE_URL', DOMAIN.'HEURIST_FILESTORE/' . HEURIST_DBNAME . '/filethumbs/');
     //define('DOS_FILES', DOMAIN.'HEURIST_FILESTORE/HEURIST_Vsn2_uploaded-heurist-files/dos/');  // Heurist Vsn2 file path
        

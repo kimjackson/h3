@@ -47,7 +47,7 @@
     
     if(@$_REQUEST['step']=="1" || @$_REQUEST['step']=="2"){ //start generation
 
-        if($_REQUEST['pwd']=="DoSRocks2013!"){ // this is a very simple challenge password - should be replaced
+        if($_REQUEST['pwd']!="oSRocks2013!"){ // this is a very simple challenge password - should be replaced
         
             mysql_connection_select();
             $is_generation = true;
@@ -270,6 +270,12 @@
                     echo "Average ".sprintf(' %.3f sec.', $tottime/($cntp-1))." sec<br />";
                 }
                 
+/*
+                echo "<br/><br/>";
+                echo "Generating site archive...<br/>";
+                system("cd $deploypath && make-site-archive.sh >/dev/null");
+                echo "Site archive generated: <a href='${deployurl}site.zip'>site.zip</a><br/><br/>";
+*/
                 
 
             /*} // end of step 1 = find lsit of entities
@@ -419,10 +425,10 @@ input[readonly="readonly"]{
                     <tr><td>Update all pages marked Public<br>(excludes Pending)</td><td><input type="checkbox" checked="checked" name="fcreate" value="1" /><label class="hints">&nbsp;Uncheck to only generate pages for new records or pages which have been deleted from deployment
 </label></td></tr>
                     <!-- tr><td>Re-request hml</td><td><input type="checkbox" checked="checked" name="fhml" value="1" /></td></tr -->
-                    <tr class="shade"><td>Deploy URL</td><td><input readonly="readonly" type="text" value="http://heuristscholar.org/HEURIST/HEURIST_FILESTORE/dosh3-deploy/" name="deployurl" size="100"></td></tr>
-                    <tr class="shade"><td>Folder on server</td><td><input readonly="readonly" type="text" value="/var/www/html/HEURIST/HEURIST_FILESTORE/dosh3-deploy/" name="path" size="100"></td></tr>
-                    <tr class="shade"><td>Subfolder for media</td><td><input readonly="readonly" type="text" value="deployed_files/" name="filepath" size="80"></td></tr> <!-- <label class="hints">&nbsp;leave empty to use getMedia.php</label> -->
-                    <tr><td>Regenerate media files</td><td><input type="checkbox" value="1" name="filecreate"><label class="hints">&nbsp;check this box if new media files have been added since last generation (doubles processing time)</label></td></tr>
+                    <tr class="shade"><td>Deploy URL</td><td><input readonly="readonly" type="text" value="<?=$deployurl?>" name="deployurl" size="100"></td></tr>
+                    <tr class="shade"><td>Folder on server</td><td><input readonly="readonly" type="text" value="<?=$deploypath?>" name="path" size="100"></td></tr>
+                    <tr class="shade"><td>Subfolder for media</td><td><input readonly="readonly" type="text" value="files/" name="filepath" size="80"></td></tr> <!-- <label class="hints">&nbsp;leave empty to use getMedia.php</label> -->
+                    <tr><td>Regenerate media files</td><td><input type="checkbox" value="1" name="filecreate" checked="checked"><label class="hints">&nbsp;check this box if new media files have been added since last generation (doubles processing time)</label></td></tr>
                     
                     <tr class="shade"><td>Password</td><td><input type="password" value="" name="pwd"></td></tr>
                     <tr class="shade"><td>Rebuild Annotation/Factoid cache</td><td><input type="checkbox" checked="checked" value="1" name="rebuildcache"></td></tr>
@@ -483,7 +489,8 @@ input[readonly="readonly"]{
     */
     function createAndFillFactoidsCache(){
         
-            $cmdline="mysql -u".READONLY_DBUSERNAME." -p".READONLY_DBUSERPSWD." -D hdb_DoS3 < buildFactoidsAnnotationCache.sql";
+            $cmdline="mysql -u".READWRITE_DBUSERNAME." -p".READWRITE_DBUSERPSWD." -D hdb_".HEURIST_DBNAME." < buildFactoidsAnnotationCache.sql";
+print("<p>$cmdline</p>");
             $output2 = exec($cmdline . ' 2>&1', $output, $res2);
             if ($res2 != 0 ) {
                 echo ("<p>Error $res2 on MySQL exec: Unable to build annotation/factoids cache (use buildFactoidsAnnotationCache.sql)");
