@@ -57,6 +57,7 @@ if ( $type == RT_ENTRY ||
 					 rec_Title
 	            from Records
 	           where rec_RecTypeID = ".$type."
+	             and rec_ID <> 2674
 	        order by ".$order_stm;
 
             //and rec_NonOwnerVisibility = 'public'
@@ -261,6 +262,7 @@ if ( $type == RT_ENTRY ){ //find entry types
                               on entity_type.dtl_Value = terms.trm_ID
 
                where rec_RecTypeID = ".RT_ENTRY."
+	             and rec_ID <> 2674
             order by terms.trm_Label, ".$order_stm;
 
 //and rec_NonOwnerVisibility = 'public'
@@ -391,6 +393,7 @@ if ( $type == RT_ENTRY ) {
                      left join recDetails licence on entry.rec_ID = licence.dtl_RecID and licence.dtl_DetailTypeID = ".DT_TYPE_LICENSE."
                      left join defTerms terms on licence.dtl_Value = terms.trm_ID
                where rec_RecTypeID = ".RT_ENTRY."
+	             and rec_ID <> 2674
             order by lictype, ".$order_stm;
 
 	$res = mysql_query($query);

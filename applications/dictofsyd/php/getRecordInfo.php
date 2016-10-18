@@ -55,7 +55,8 @@
 
                     $query = 'select d.dtl_RecID as rec_id, r.rec_RecTypeID as rectype, d.dtl_DetailTypeID as dttype, d.dtl_Value as dtvalue from Records r, recDetails d '.
                     ' where r.rec_RecTypeID in ('.RT_ENTRY.','.RT_MEDIA.','.RT_TILEDIMAGE.')
-                    and r.rec_ID=d.dtl_RecID and r.rec_ID in ('.$ids.') and d.dtl_DetailTypeID in ('.DT_NAME.','.DT_TYPE_MIME.','.DT_TILEDIMAGE_TYPE.')';
+                    and r.rec_ID=d.dtl_RecID and r.rec_ID in ('.$ids.') and d.dtl_DetailTypeID in ('.DT_NAME.','.DT_TYPE_MIME.','.DT_TILEDIMAGE_TYPE.')
+                    and r.rec_ID <> 2674';
                     addRelations($record, false, $query);
                 }
 
@@ -263,7 +264,8 @@
 
                 $query = 'select r.rec_RecTypeID as rectype, d.dtl_RecID as rec_id, r.rec_URL as url, '.
                 'd.dtl_DetailTypeID as dttype, d.dtl_Value as dtvalue, d.dtl_UploadedFileID as dtfile from Records r, recDetails d '.
-                'where r.rec_ID in ('.$ids.') and r.rec_RecTypeID in ('.RT_WEBLINK.','.RT_MEDIA.','.RT_ENTRY.','.RT_ENTITY.','.RT_MAP.','.RT_TERM.') and r.rec_ID=d.dtl_RecID';
+                'where r.rec_ID in ('.$ids.') and r.rec_RecTypeID in ('.RT_WEBLINK.','.RT_MEDIA.','.RT_ENTRY.','.RT_ENTITY.','.RT_MAP.','.RT_TERM.') and r.rec_ID=d.dtl_RecID '.
+                'and r.rec_ID <> 2674';
 
                 //get related records
                 $res2 = mysql_query($query);
